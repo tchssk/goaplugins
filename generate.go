@@ -55,6 +55,9 @@ func serviceInterface(f *codegen.File) {
 			if dt, ok := method.Payload.Type.(expr.UserType); ok {
 				obj := expr.AsObject(dt)
 				for _, nat := range *obj {
+					if !mustGenerate(nat.Attribute.Meta) {
+						continue
+					}
 					name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
 					typ := codegen.NewNameScope().GoTypeName(nat.Attribute)
 					if method.Payload.IsPrimitivePointer(nat.Name, true) {
@@ -75,6 +78,15 @@ func serviceInterface(f *codegen.File) {
 			}
 		}
 	}
+}
+
+func mustGenerate(meta expr.MetaExpr) bool {
+	if m, ok := meta["goainterface:generate"]; ok {
+		if len(m) > 0 && m[0] == "false" {
+			return false
+		}
+	}
+	return true
 }
 
 var servicePayloadMethodT = `

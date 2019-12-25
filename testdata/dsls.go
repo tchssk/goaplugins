@@ -30,6 +30,9 @@ var SingleServiceDSL = func() {
 		Attribute("RequiredAttributeString", String)
 		Attribute("RequiredAttributeBytes", Bytes)
 		Attribute("RequiredAttributeAny", Any)
+		Attribute("Ignored", String, func() {
+			Meta("goainterface:generate", "false")
+		})
 		Required(
 			"RequiredAttributeBoolean",
 			"RequiredAttributeInt",

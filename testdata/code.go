@@ -43,6 +43,7 @@ type Payload struct {
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     interface{}
+	Ignored                  *string
 }
 
 func (p *Payload) GetAttributeBoolean() *bool {
