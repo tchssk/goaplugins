@@ -51,31 +51,34 @@ func serviceInterface(f *codegen.File) {
 			continue
 		}
 		fm := codegen.TemplateFuncs()
-		if method.Payload.Type != expr.Empty {
-			if dt, ok := method.Payload.Type.(expr.UserType); ok {
-				obj := expr.AsObject(dt)
-				for _, nat := range *obj {
-					if !mustGenerate(nat.Attribute.Meta) {
-						continue
-					}
-					name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
-					typ := codegen.NewNameScope().GoTypeName(nat.Attribute)
-					if method.Payload.IsPrimitivePointer(nat.Name, true) {
-						typ = "*" + typ
-					}
-					f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-						Name:   "service-payload-method",
-						Source: servicePayloadMethodT,
-						Data: MethodData{
-							Payload: data.Payload,
-							Name:    name,
-							Type:    typ,
-							Var:     codegen.NewNameScope().GoVar(name, nat.Attribute.Type),
-						},
-						FuncMap: fm,
-					})
-				}
+		if method.Payload.Type == expr.Empty {
+			continue
+		}
+		dt, ok := method.Payload.Type.(expr.UserType)
+		if !ok {
+			continue
+		}
+		obj := expr.AsObject(dt)
+		for _, nat := range *obj {
+			if !mustGenerate(nat.Attribute.Meta) {
+				continue
 			}
+			name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
+			typ := codegen.NewNameScope().GoTypeName(nat.Attribute)
+			if method.Payload.IsPrimitivePointer(nat.Name, true) {
+				typ = "*" + typ
+			}
+			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
+				Name:   "service-payload-method",
+				Source: servicePayloadMethodT,
+				Data: MethodData{
+					Payload: data.Payload,
+					Name:    name,
+					Type:    typ,
+					Var:     codegen.NewNameScope().GoVar(name, nat.Attribute.Type),
+				},
+				FuncMap: fm,
+			})
 		}
 	}
 }
