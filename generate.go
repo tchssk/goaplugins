@@ -41,6 +41,9 @@ func serviceInterface(f *codegen.File) {
 		}
 		svc = expr.Root.Service(data.Name)
 	}
+	if svc == nil {
+		return
+	}
 	for _, section := range f.Section("service-payload") {
 		data, ok := section.Data.(*service.MethodData)
 		if !ok {
@@ -50,7 +53,6 @@ func serviceInterface(f *codegen.File) {
 		if method == nil {
 			continue
 		}
-		fm := codegen.TemplateFuncs()
 		if method.Payload.Type == expr.Empty {
 			continue
 		}
@@ -58,25 +60,16 @@ func serviceInterface(f *codegen.File) {
 		if !ok {
 			continue
 		}
+		fm := codegen.TemplateFuncs()
 		obj := expr.AsObject(dt)
 		for _, nat := range *obj {
 			if !mustGenerate(nat.Attribute.Meta) {
 				continue
 			}
-			name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
-			typ := codegen.NewNameScope().GoTypeName(nat.Attribute)
-			if method.Payload.IsPrimitivePointer(nat.Name, true) {
-				typ = "*" + typ
-			}
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:   "service-payload-method",
-				Source: servicePayloadMethodT,
-				Data: MethodData{
-					Payload: data.Payload,
-					Name:    name,
-					Type:    typ,
-					Var:     codegen.NewNameScope().GoVar(name, nat.Attribute.Type),
-				},
+				Name:    "service-payload-method",
+				Source:  servicePayloadMethodT,
+				Data:    buildMethodData(method, nat, data.Payload, codegen.NewNameScope()),
 				FuncMap: fm,
 			})
 		}
@@ -90,6 +83,20 @@ func mustGenerate(meta expr.MetaExpr) bool {
 		}
 	}
 	return true
+}
+
+func buildMethodData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, payload string, scope *codegen.NameScope) *MethodData {
+	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
+	typ := scope.GoTypeName(nat.Attribute)
+	if method.Payload.IsPrimitivePointer(nat.Name, true) {
+		typ = "*" + typ
+	}
+	return &MethodData{
+		Payload: payload,
+		Name:    name,
+		Type:    typ,
+		Var:     scope.GoVar(name, nat.Attribute.Type),
+	}
 }
 
 var servicePayloadMethodT = `
