@@ -6,8 +6,8 @@ import (
 	"go/format"
 	"testing"
 
-	"github.com/tchssk/goainterface"
-	"github.com/tchssk/goainterface/testdata"
+	"github.com/tchssk/goaplugins/goainterface"
+	"github.com/tchssk/goaplugins/goainterface/testdata"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
