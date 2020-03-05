@@ -13,6 +13,10 @@ import (
 
 const (
 	serverPayloadInitDescriptionSuffix = " It allows an empty body."
+	serverServerBodyValidateDefPrefix  = `	if body == nil {
+		return
+	}
+`
 )
 
 func init() {
@@ -63,17 +67,22 @@ func update(f *codegen.File) {
 			}
 			if !strings.HasSuffix(data.Payload.Request.PayloadInit.Description, serverPayloadInitDescriptionSuffix) {
 				data.Payload.Request.PayloadInit.Description += serverPayloadInitDescriptionSuffix
-				section.Source = strings.Replace(section.Source,
-					`			if err == io.EOF {
+			}
+			if data.Payload.Request.ServerBody.ValidateDef != "" {
+				if !strings.HasPrefix(data.Payload.Request.ServerBody.ValidateDef, serverServerBodyValidateDefPrefix) {
+					data.Payload.Request.ServerBody.ValidateDef = serverServerBodyValidateDefPrefix + data.Payload.Request.ServerBody.ValidateDef
+				}
+			}
+			section.Source = strings.Replace(section.Source,
+				`			if err == io.EOF {
 				return nil, goa.MissingPayloadError()
 			}
 			return nil, goa.DecodePayloadError(err.Error())`,
-					`			if err != io.EOF {
+				`			if err != io.EOF {
 				return nil, goa.DecodePayloadError(err.Error())
 			}`,
-					-1,
-				)
-			}
+				-1,
+			)
 		}
 	case "types.go":
 		for _, section := range f.Section("server-payload-init") {

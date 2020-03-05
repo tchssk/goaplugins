@@ -21,7 +21,7 @@ var MethodNames = [2]string{"Method1", "Method2"}
 
 // Payload is the payload type of the Service1 service Method1 method.
 type Payload struct {
-	Attribute *string
+	Attribute string
 	EmptyBody bool
 }
 `
@@ -45,7 +45,7 @@ var MethodNames = [1]string{"Method1"}
 
 // Payload is the payload type of the Service2 service Method1 method.
 type Payload struct {
-	Attribute *string
+	Attribute string
 }
 `
 
@@ -71,6 +71,10 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			if err != io.EOF {
 				return nil, goa.DecodePayloadError(err.Error())
 			}
+		}
+		err = ValidateMethod1RequestBody(&body)
+		if err != nil {
+			return nil, err
 		}
 		payload := NewMethod1Payload(&body)
 
@@ -101,6 +105,10 @@ func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 				return nil, goa.MissingPayloadError()
 			}
 			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateMethod2RequestBody(&body)
+		if err != nil {
+			return nil, err
 		}
 		payload := NewMethod2Payload(&body)
 
@@ -133,6 +141,10 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
+		err = ValidateMethod1RequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
 		payload := NewMethod1Payload(&body)
 
 		return payload, nil
@@ -162,7 +174,7 @@ func NewMethod1Payload(body *Method1RequestBody) *service1.Payload {
 		}
 	} else {
 		v = &service1.Payload{
-			Attribute: body.Attribute,
+			Attribute: *body.Attribute,
 		}
 	}
 	return v
@@ -171,9 +183,28 @@ func NewMethod1Payload(body *Method1RequestBody) *service1.Payload {
 // NewMethod2Payload builds a Service1 service Method2 endpoint payload.
 func NewMethod2Payload(body *Method2RequestBody) *service1.Payload {
 	v := &service1.Payload{
-		Attribute: body.Attribute,
+		Attribute: *body.Attribute,
 	}
 	return v
+}
+
+// ValidateMethod1RequestBody runs the validations defined on Method1RequestBody
+func ValidateMethod1RequestBody(body *Method1RequestBody) (err error) {
+	if body == nil {
+		return
+	}
+	if body.Attribute == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Attribute", "body"))
+	}
+	return
+}
+
+// ValidateMethod2RequestBody runs the validations defined on Method2RequestBody
+func ValidateMethod2RequestBody(body *Method2RequestBody) (err error) {
+	if body.Attribute == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Attribute", "body"))
+	}
+	return
 }
 `
 
@@ -186,8 +217,16 @@ type Method1RequestBody struct {
 // NewMethod1Payload builds a Service2 service Method1 endpoint payload.
 func NewMethod1Payload(body *Method1RequestBody) *service2.Payload {
 	v := &service2.Payload{
-		Attribute: body.Attribute,
+		Attribute: *body.Attribute,
 	}
 	return v
+}
+
+// ValidateMethod1RequestBody runs the validations defined on Method1RequestBody
+func ValidateMethod1RequestBody(body *Method1RequestBody) (err error) {
+	if body.Attribute == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("Attribute", "body"))
+	}
+	return
 }
 `

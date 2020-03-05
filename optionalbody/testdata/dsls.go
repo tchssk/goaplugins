@@ -8,6 +8,7 @@ import (
 var SimpleDSL = func() {
 	var payload = Type("Payload", func() {
 		Attribute("Attribute", String)
+		Required("Attribute")
 	})
 	Service("Service1", func() {
 		Method("Method1", func() {
