@@ -63,20 +63,27 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			body Method1RequestBody
-			err  error
+			body      Method1RequestBody
+			emptyBody bool
+			err       error
 		)
 		err = decoder(r).Decode(&body)
 		if err != nil {
 			if err != io.EOF {
 				return nil, goa.DecodePayloadError(err.Error())
 			}
+			emptyBody = true
 		}
-		err = ValidateMethod1RequestBody(&body)
-		if err != nil {
-			return nil, err
+		if !emptyBody {
+			err = ValidateMethod1RequestBody(&body)
+			if err != nil {
+				return nil, err
+			}
 		}
-		payload := NewMethod1Payload(&body)
+		payload := NewMethod1PayloadWithOptionalBody(&body)
+		if !emptyBody {
+			payload = NewMethod1Payload(&body)
+		}
 
 		return payload, nil
 	}
@@ -167,15 +174,8 @@ type Method2RequestBody struct {
 // NewMethod1Payload builds a Service1 service Method1 endpoint payload. It
 // allows an empty body.
 func NewMethod1Payload(body *Method1RequestBody) *service1.Payload {
-	var v *service1.Payload
-	if body == nil {
-		v = &service1.Payload{
-			EmptyBody: true,
-		}
-	} else {
-		v = &service1.Payload{
-			Attribute: *body.Attribute,
-		}
+	v := &service1.Payload{
+		Attribute: *body.Attribute,
 	}
 	return v
 }
@@ -190,9 +190,6 @@ func NewMethod2Payload(body *Method2RequestBody) *service1.Payload {
 
 // ValidateMethod1RequestBody runs the validations defined on Method1RequestBody
 func ValidateMethod1RequestBody(body *Method1RequestBody) (err error) {
-	if body == nil {
-		return
-	}
 	if body.Attribute == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("Attribute", "body"))
 	}
@@ -205,6 +202,15 @@ func ValidateMethod2RequestBody(body *Method2RequestBody) (err error) {
 		err = goa.MergeErrors(err, goa.MissingFieldError("Attribute", "body"))
 	}
 	return
+}
+
+// NewMethod1Payload builds a Service1 service Method1 endpoint payload. It
+// allows an empty body.
+func NewMethod1PayloadWithOptionalBody(body *Method1RequestBody) *service1.Payload {
+	v := &service1.Payload{
+		EmptyBody: true,
+	}
+	return v
 }
 `
 
