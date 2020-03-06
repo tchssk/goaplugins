@@ -16,6 +16,20 @@ const (
 	serverPayloadInitDescriptionSuffix = " It allows an empty body."
 )
 
+const payloadInitT = `{{ printf "New%s initializes payload type %s." .Payload .Payload | comment }}
+func New{{ .Payload }}(emptyBody bool) *{{ .Payload }} {
+	return &{{ .Payload }}{
+		emptyBody: emptyBody,
+	}
+}
+`
+
+const payloadHasEmptyBodyT = `{{ comment "HasEmptyBody reports whether the payload has an empty body." }}
+func (p *{{ .Payload }}) HasEmptyBody() bool {
+	return p.emptyBody
+}
+`
+
 func init() {
 	codegen.RegisterPlugin("optionalbody", "gen", nil, Update)
 }
@@ -43,10 +57,20 @@ func update(f *codegen.File) {
 				if _, ok := s[method.Name]; !ok {
 					continue
 				}
-				if strings.Contains(method.PayloadDef, "EmptyBody bool") {
+				if strings.Contains(method.PayloadDef, "emptyBody bool") {
 					continue
 				}
-				method.PayloadDef = addField(method.PayloadDef, "EmptyBody bool")
+				method.PayloadDef = addField(method.PayloadDef, "emptyBody bool")
+				f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
+					Name:   "service-payload-init",
+					Source: payloadInitT,
+					Data:   method,
+				})
+				f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
+					Name:   "service-payload-hasemptybody",
+					Source: payloadHasEmptyBodyT,
+					Data:   method,
+				})
 			}
 		}
 	case "encode_decode.go":
@@ -157,5 +181,5 @@ func fixAssignments(s string) string {
 	if len(ss) < 3 {
 		return s
 	}
-	return strings.Join([]string{ss[0], "EmptyBody: true,", ss[len(ss)-1]}, "\n")
+	return strings.Replace(strings.Replace(strings.Replace(ss[0], ":= &", ":= ", -1), ".", ".New", -1), "{", "(true)", -1)
 }

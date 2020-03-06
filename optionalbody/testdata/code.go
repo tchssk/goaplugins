@@ -22,7 +22,19 @@ var MethodNames = [2]string{"Method1", "Method2"}
 // Payload is the payload type of the Service1 service Method1 method.
 type Payload struct {
 	Attribute string
-	EmptyBody bool
+	emptyBody bool
+}
+
+// NewPayload initializes payload type Payload.
+func NewPayload(emptyBody bool) *Payload {
+	return &Payload{
+		emptyBody: emptyBody,
+	}
+}
+
+// HasEmptyBody reports whether the payload has an empty body.
+func (p *Payload) HasEmptyBody() bool {
+	return p.emptyBody
 }
 `
 
@@ -207,9 +219,7 @@ func ValidateMethod2RequestBody(body *Method2RequestBody) (err error) {
 // NewMethod1Payload builds a Service1 service Method1 endpoint payload. It
 // allows an empty body.
 func NewMethod1PayloadWithOptionalBody(body *Method1RequestBody) *service1.Payload {
-	v := &service1.Payload{
-		EmptyBody: true,
-	}
+	v := service1.NewPayload(true)
 	return v
 }
 `
