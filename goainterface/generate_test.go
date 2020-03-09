@@ -2,7 +2,6 @@ package goainterface_test
 
 import (
 	"bytes"
-	"fmt"
 	"go/format"
 	"testing"
 
@@ -41,7 +40,6 @@ func TestService(t *testing.T) {
 			}
 			bs, err := format.Source(buf.Bytes())
 			if err != nil {
-				fmt.Println(buf.String())
 				t.Fatal(err)
 			}
 			code := string(bs)
