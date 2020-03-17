@@ -1,12 +1,12 @@
-package goainterface_test
+package attributegetter_test
 
 import (
 	"bytes"
 	"go/format"
 	"testing"
 
-	"github.com/tchssk/goaplugins/goainterface"
-	"github.com/tchssk/goaplugins/goainterface/testdata"
+	"github.com/tchssk/goaplugins/attributegetter"
+	"github.com/tchssk/goaplugins/attributegetter/testdata"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
@@ -31,7 +31,7 @@ func TestService(t *testing.T) {
 			if fs == nil {
 				t.Fatalf("got nil file, expected not nil")
 			}
-			goainterface.Generate("", []eval.Root{expr.Root}, []*codegen.File{fs})
+			attributegetter.Generate("", []eval.Root{expr.Root}, []*codegen.File{fs})
 			buf := new(bytes.Buffer)
 			for _, s := range fs.SectionTemplates[1:] {
 				if err := s.Write(buf); err != nil {

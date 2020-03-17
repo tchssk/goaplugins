@@ -1,4 +1,4 @@
-package goainterface
+package attributegetter
 
 import (
 	"path/filepath"
@@ -19,17 +19,17 @@ type (
 )
 
 func init() {
-	codegen.RegisterPlugin("goainterface", "gen", nil, Generate)
+	codegen.RegisterPlugin("attributegetter", "gen", nil, Generate)
 }
 
 func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
 	for _, f := range files {
-		serviceInterface(f)
+		serviceAttributeGetter(f)
 	}
 	return files, nil
 }
 
-func serviceInterface(f *codegen.File) {
+func serviceAttributeGetter(f *codegen.File) {
 	if filepath.Base(f.Path) != "service.go" {
 		return
 	}
@@ -77,7 +77,7 @@ func serviceInterface(f *codegen.File) {
 }
 
 func mustGenerate(meta expr.MetaExpr) bool {
-	if m, ok := meta["goainterface:generate"]; ok {
+	if m, ok := meta["attributegetter:generate"]; ok {
 		if len(m) > 0 && m[0] == "false" {
 			return false
 		}
