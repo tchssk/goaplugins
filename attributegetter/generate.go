@@ -95,7 +95,7 @@ func buildMethodData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, payl
 		Payload: payload,
 		Name:    name,
 		Type:    typ,
-		Var:     scope.GoVar(name, nat.Attribute.Type),
+		Var:     name,
 	}
 }
 
