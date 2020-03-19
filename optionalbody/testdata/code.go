@@ -85,6 +85,7 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 				return nil, goa.DecodePayloadError(err.Error())
 			}
 			emptyBody = true
+			err = nil
 		}
 		if !emptyBody {
 			err = ValidateMethod1RequestBody(&body)

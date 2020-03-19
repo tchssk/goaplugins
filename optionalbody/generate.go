@@ -109,7 +109,8 @@ func update(f *codegen.File) {
 				`			if err != io.EOF {
 				return nil, goa.DecodePayloadError(err.Error())
 			}
-			emptyBody = true`,
+			emptyBody = true
+			err = nil`,
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
