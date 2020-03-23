@@ -164,6 +164,7 @@ func update(f *codegen.File) {
 					ServerCode:          fixAssignments(data.ServerCode),
 					ClientCode:          data.ClientCode,
 				},
+				FuncMap: section.FuncMap,
 			})
 		}
 	}
