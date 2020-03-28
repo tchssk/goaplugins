@@ -190,6 +190,7 @@ func NewMethod1Payload(body *Method1RequestBody) *service1.Payload {
 	v := &service1.Payload{
 		Attribute: *body.Attribute,
 	}
+
 	return v
 }
 
@@ -198,6 +199,7 @@ func NewMethod2Payload(body *Method2RequestBody) *service1.Payload {
 	v := &service1.Payload{
 		Attribute: *body.Attribute,
 	}
+
 	return v
 }
 
@@ -221,6 +223,7 @@ func ValidateMethod2RequestBody(body *Method2RequestBody) (err error) {
 // allows an empty body.
 func NewMethod1PayloadWithOptionalBody(body *Method1RequestBody) *service1.Payload {
 	v := service1.NewPayload(true)
+
 	return v
 }
 `
@@ -236,6 +239,7 @@ func NewMethod1Payload(body *Method1RequestBody) *service2.Payload {
 	v := &service2.Payload{
 		Attribute: *body.Attribute,
 	}
+
 	return v
 }
 
