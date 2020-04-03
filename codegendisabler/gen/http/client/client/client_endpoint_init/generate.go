@@ -1,4 +1,4 @@
-package buildstreamrequest
+package clientendpointinit
 
 import (
 	"path/filepath"
@@ -9,17 +9,17 @@ import (
 )
 
 func init() {
-	codegen.RegisterPlugin("codegendisabler-gen-http-client-encode-decode-buildstreamrequest", "gen", nil, Generate)
+	codegen.RegisterPlugin("codegendisabler-gen-http-client-client-clientendpointinit", "gen", nil, Generate)
 }
 
 func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
 	for _, f := range files {
-		if !strings.HasSuffix(f.Path, filepath.Join("client", "encode_decode.go")) {
+		if !strings.HasSuffix(f.Path, filepath.Join("client", "client.go")) {
 			continue
 		}
 		var sections []*codegen.SectionTemplate
 		for _, section := range f.SectionTemplates {
-			if section.Name != "build-stream-request" {
+			if section.Name != "client-endpoint-init" {
 				sections = append(sections, section)
 			}
 		}
