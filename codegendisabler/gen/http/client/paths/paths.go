@@ -15,7 +15,7 @@ func init() {
 func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
 	var fs []*codegen.File
 	for _, f := range files {
-		if strings.HasSuffix(f.Path, filepath.Join("client", "paths.go")) {
+		if strings.HasPrefix(f.Path, filepath.Join("gen", "http")) && strings.HasSuffix(f.Path, filepath.Join("client", "paths.go")) {
 			continue
 		}
 		fs = append(fs, f)
