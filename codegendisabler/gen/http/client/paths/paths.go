@@ -1,5 +1,24 @@
 package paths
 
 import (
-	_ "github.com/tchssk/goaplugins/codegendisabler/gen/http/client/paths/path"
+	"path/filepath"
+	"strings"
+
+	"goa.design/goa/v3/codegen"
+	"goa.design/goa/v3/eval"
 )
+
+func init() {
+	codegen.RegisterPlugin("codegendisabler-gen-http-client-paths", "gen", nil, Generate)
+}
+
+func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
+	var fs []*codegen.File
+	for _, f := range files {
+		if strings.HasSuffix(f.Path, filepath.Join("client", "paths.go")) {
+			continue
+		}
+		fs = append(fs, f)
+	}
+	return fs, nil
+}
