@@ -5,7 +5,7 @@ that makes it possible to disable a part of the code generator.
 
 ## Enabling the Plugin
 
-To enable the plugin simply import one of the codedisabler packages as follows:
+To enable the plugin simply import one of the codegendisabler packages as follows:
 
 ```go
 import (
