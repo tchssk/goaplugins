@@ -16,3 +16,14 @@ import (
 
 This code disables a part of the code generator which generates by a section template named
 `client-body-init` to `gen/http/<service>/client/types.go`.
+
+## Common usage
+
+### Disabling the client code generation
+
+```go
+import (
+  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/cli/cli"
+  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/client"
+)
+```
