@@ -19,11 +19,19 @@ This code disables a part of the code generator which generates by a section tem
 
 ## Common usage
 
-### Disabling the client code generation
+### Disabling the HTTP client code generation
 
 ```go
 import (
   _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/cli/cli"
   _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/client"
+)
+```
+
+### Disabling the HTTP server code generation
+
+```go
+import (
+  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/server"
 )
 ```
