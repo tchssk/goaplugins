@@ -65,7 +65,7 @@ var EncodeDecodeWithOptionalBodyCode = `// EncodeMethod1Response returns an enco
 // Service1 Method1 endpoint.
 func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
 }
@@ -106,7 +106,7 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 // Service1 Method2 endpoint.
 func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
 }
@@ -141,7 +141,7 @@ var EncodeDecodeWithoutOptionalBodyCode = `// EncodeMethod1Response returns an e
 // Service2 Method1 endpoint.
 func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
 }
