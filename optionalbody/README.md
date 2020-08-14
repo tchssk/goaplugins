@@ -3,6 +3,10 @@
 The `optionalbody` plugin is a [Goa v3](https://github.com/goadesign/goa/tree/v3) plugin
 that makes it possible to define an optional body for HTTP server endpoints.
 
+## Note
+
+Goa supports the optional HTTP request body since v3.2.1.
+
 ## Enabling the Plugin
 
 To enable the plugin and make use of the OptionalBody DSL simply import both the `optionalbody` and

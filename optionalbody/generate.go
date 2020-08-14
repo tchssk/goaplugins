@@ -102,10 +102,19 @@ func update(f *codegen.File) {
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
-				`			if err == io.EOF {
+				`	{{- if .Payload.Request.MustHaveBody }}
+			if err == io.EOF {
 				return nil, goa.MissingPayloadError()
 			}
-			return nil, goa.DecodePayloadError(err.Error())`,
+	{{- else }}
+			if err == io.EOF {
+				err = nil
+			} else {
+	{{- end }}
+			return nil, goa.DecodePayloadError(err.Error())
+	{{- if not .Payload.Request.MustHaveBody }}
+			}
+	{{- end }}`,
 				`			if err != io.EOF {
 				return nil, goa.DecodePayloadError(err.Error())
 			}
@@ -114,20 +123,20 @@ func update(f *codegen.File) {
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
-				`		{{- if .Payload.Request.ServerBody.ValidateRef }}
+				`	{{- if .Payload.Request.ServerBody.ValidateRef }}
 		{{ .Payload.Request.ServerBody.ValidateRef }}
 		if err != nil {
 			return nil, err
 		}
-		{{- end }}`,
-				`		{{- if .Payload.Request.ServerBody.ValidateRef }}
+	{{- end }}`,
+				`	{{- if .Payload.Request.ServerBody.ValidateRef }}
 		if !emptyBody {
 			{{ .Payload.Request.ServerBody.ValidateRef }}
 			if err != nil {
 				return nil, err
 			}
 		}
-		{{- end }}`,
+	{{- end }}`,
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
