@@ -1,4 +1,4 @@
-module github.com/tchssk/goaplugins
+module github.com/tchssk/goaplugins/v3
 
 go 1.14
 

@@ -5,8 +5,8 @@ import (
 	"go/format"
 	"testing"
 
-	"github.com/tchssk/goaplugins/optionalbody"
-	"github.com/tchssk/goaplugins/optionalbody/testdata"
+	"github.com/tchssk/goaplugins/v3/optionalbody"
+	"github.com/tchssk/goaplugins/v3/optionalbody/testdata"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"

@@ -9,7 +9,7 @@ To enable the plugin simply import one of the codegendisabler packages as follow
 
 ```go
 import (
-  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/client/types/client_body_init"
+  _ "github.com/tchssk/goaplugins/v3/codegendisabler/gen/http/client/types/client_body_init"
   . "goa.design/goa/v3/dsl"
 )
 ```
@@ -23,8 +23,8 @@ This code disables a part of the code generator which generates by a section tem
 
 ```go
 import (
-  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/cli/cli"
-  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/client"
+  _ "github.com/tchssk/goaplugins/v3/codegendisabler/gen/http/cli/cli"
+  _ "github.com/tchssk/goaplugins/v3/codegendisabler/gen/http/client"
 )
 ```
 
@@ -32,6 +32,6 @@ import (
 
 ```go
 import (
-  _ "github.com/tchssk/goaplugins/codegendisabler/gen/http/server"
+  _ "github.com/tchssk/goaplugins/v3/codegendisabler/gen/http/server"
 )
 ```

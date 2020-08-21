@@ -5,10 +5,10 @@ import (
 	"goa.design/goa/v3/eval"
 	goaexpr "goa.design/goa/v3/expr"
 
-	"github.com/tchssk/goaplugins/optionalbody/expr"
+	"github.com/tchssk/goaplugins/v3/optionalbody/expr"
 
 	// Register code generators for the Optional Body plugin
-	_ "github.com/tchssk/goaplugins/optionalbody"
+	_ "github.com/tchssk/goaplugins/v3/optionalbody"
 )
 
 // OptionalBody describes an optional HTTP request body.

@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tchssk/goaplugins/optionalbody/expr"
+	"github.com/tchssk/goaplugins/v3/optionalbody/expr"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"

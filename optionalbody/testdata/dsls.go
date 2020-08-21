@@ -1,7 +1,7 @@
 package testdata
 
 import (
-	"github.com/tchssk/goaplugins/optionalbody/dsl"
+	"github.com/tchssk/goaplugins/v3/optionalbody/dsl"
 	. "goa.design/goa/v3/dsl"
 )
 

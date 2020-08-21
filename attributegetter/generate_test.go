@@ -5,8 +5,8 @@ import (
 	"go/format"
 	"testing"
 
-	"github.com/tchssk/goaplugins/attributegetter"
-	"github.com/tchssk/goaplugins/attributegetter/testdata"
+	"github.com/tchssk/goaplugins/v3/attributegetter"
+	"github.com/tchssk/goaplugins/v3/attributegetter/testdata"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
