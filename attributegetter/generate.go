@@ -10,7 +10,7 @@ import (
 )
 
 type (
-	MethodData struct {
+	MethodPayloadData struct {
 		Payload string
 		Name    string
 		Type    string
@@ -69,7 +69,7 @@ func serviceAttributeGetter(f *codegen.File) {
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 				Name:    "service-payload-method",
 				Source:  servicePayloadMethodT,
-				Data:    buildMethodData(method, nat, data.Payload, codegen.NewNameScope()),
+				Data:    buildMethodPayloadData(method, nat, data.Payload, codegen.NewNameScope()),
 				FuncMap: fm,
 			})
 		}
@@ -85,13 +85,13 @@ func mustGenerate(meta expr.MetaExpr) bool {
 	return true
 }
 
-func buildMethodData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, payload string, scope *codegen.NameScope) *MethodData {
+func buildMethodPayloadData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, payload string, scope *codegen.NameScope) *MethodPayloadData {
 	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
 	typ := scope.GoTypeName(nat.Attribute)
 	if method.Payload.IsPrimitivePointer(nat.Name, true) {
 		typ = "*" + typ
 	}
-	return &MethodData{
+	return &MethodPayloadData{
 		Payload: payload,
 		Name:    name,
 		Type:    typ,
