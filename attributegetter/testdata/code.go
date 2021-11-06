@@ -4,7 +4,7 @@ var SimpleCode = `
 // Service is the Service service interface.
 type Service interface {
 	// Method implements Method.
-	Method(context.Context, *Payload) (err error)
+	Method(context.Context, *Payload) (res *Result, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -44,6 +44,132 @@ type Payload struct {
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     interface{}
 	Ignored                  *string
+}
+
+// Result is the result type of the Service service Method method.
+type Result struct {
+	AttributeBoolean         *bool
+	AttributeInt             *int
+	AttributeInt32           *int32
+	AttributeInt64           *int64
+	AttributeUInt            *uint
+	AttributeUInt32          *uint32
+	AttributeUInt64          *uint64
+	AttributeFloat32         *float32
+	AttributeFloat64         *float64
+	AttributeString          *string
+	AttributeBytes           []byte
+	AttributeAny             interface{}
+	RequiredAttributeBoolean bool
+	RequiredAttributeInt     int
+	RequiredAttributeInt32   int32
+	RequiredAttributeInt64   int64
+	RequiredAttributeUInt    uint
+	RequiredAttributeUInt32  uint32
+	RequiredAttributeUInt64  uint64
+	RequiredAttributeFloat32 float32
+	RequiredAttributeFloat64 float64
+	RequiredAttributeString  string
+	RequiredAttributeBytes   []byte
+	RequiredAttributeAny     interface{}
+	Ignored                  *string
+}
+
+// NewResult initializes result type Result from viewed result type Result.
+func NewResult(vres *serviceviews.Result) *Result {
+	return newResult(vres.Projected)
+}
+
+// NewViewedResult initializes viewed result type Result from result type
+// Result using the given view.
+func NewViewedResult(res *Result, view string) *serviceviews.Result {
+	p := newResultView(res)
+	return &serviceviews.Result{Projected: p, View: "default"}
+}
+
+// newResult converts projected type Result to service type Result.
+func newResult(vres *serviceviews.ResultView) *Result {
+	res := &Result{
+		AttributeBoolean:       vres.AttributeBoolean,
+		AttributeInt:           vres.AttributeInt,
+		AttributeInt32:         vres.AttributeInt32,
+		AttributeInt64:         vres.AttributeInt64,
+		AttributeUInt:          vres.AttributeUInt,
+		AttributeUInt32:        vres.AttributeUInt32,
+		AttributeUInt64:        vres.AttributeUInt64,
+		AttributeFloat32:       vres.AttributeFloat32,
+		AttributeFloat64:       vres.AttributeFloat64,
+		AttributeString:        vres.AttributeString,
+		AttributeBytes:         vres.AttributeBytes,
+		AttributeAny:           vres.AttributeAny,
+		RequiredAttributeBytes: vres.RequiredAttributeBytes,
+		RequiredAttributeAny:   vres.RequiredAttributeAny,
+		Ignored:                vres.Ignored,
+	}
+	if vres.RequiredAttributeBoolean != nil {
+		res.RequiredAttributeBoolean = *vres.RequiredAttributeBoolean
+	}
+	if vres.RequiredAttributeInt != nil {
+		res.RequiredAttributeInt = *vres.RequiredAttributeInt
+	}
+	if vres.RequiredAttributeInt32 != nil {
+		res.RequiredAttributeInt32 = *vres.RequiredAttributeInt32
+	}
+	if vres.RequiredAttributeInt64 != nil {
+		res.RequiredAttributeInt64 = *vres.RequiredAttributeInt64
+	}
+	if vres.RequiredAttributeUInt != nil {
+		res.RequiredAttributeUInt = *vres.RequiredAttributeUInt
+	}
+	if vres.RequiredAttributeUInt32 != nil {
+		res.RequiredAttributeUInt32 = *vres.RequiredAttributeUInt32
+	}
+	if vres.RequiredAttributeUInt64 != nil {
+		res.RequiredAttributeUInt64 = *vres.RequiredAttributeUInt64
+	}
+	if vres.RequiredAttributeFloat32 != nil {
+		res.RequiredAttributeFloat32 = *vres.RequiredAttributeFloat32
+	}
+	if vres.RequiredAttributeFloat64 != nil {
+		res.RequiredAttributeFloat64 = *vres.RequiredAttributeFloat64
+	}
+	if vres.RequiredAttributeString != nil {
+		res.RequiredAttributeString = *vres.RequiredAttributeString
+	}
+	return res
+}
+
+// newResultView projects result type Result to projected type ResultView using
+// the "default" view.
+func newResultView(res *Result) *serviceviews.ResultView {
+	vres := &serviceviews.ResultView{
+		AttributeBoolean:         res.AttributeBoolean,
+		AttributeInt:             res.AttributeInt,
+		AttributeInt32:           res.AttributeInt32,
+		AttributeInt64:           res.AttributeInt64,
+		AttributeUInt:            res.AttributeUInt,
+		AttributeUInt32:          res.AttributeUInt32,
+		AttributeUInt64:          res.AttributeUInt64,
+		AttributeFloat32:         res.AttributeFloat32,
+		AttributeFloat64:         res.AttributeFloat64,
+		AttributeString:          res.AttributeString,
+		AttributeBytes:           res.AttributeBytes,
+		AttributeAny:             res.AttributeAny,
+		RequiredAttributeBoolean: &res.RequiredAttributeBoolean,
+		RequiredAttributeInt:     &res.RequiredAttributeInt,
+		RequiredAttributeInt32:   &res.RequiredAttributeInt32,
+		RequiredAttributeInt64:   &res.RequiredAttributeInt64,
+		RequiredAttributeUInt:    &res.RequiredAttributeUInt,
+		RequiredAttributeUInt32:  &res.RequiredAttributeUInt32,
+		RequiredAttributeUInt64:  &res.RequiredAttributeUInt64,
+		RequiredAttributeFloat32: &res.RequiredAttributeFloat32,
+		RequiredAttributeFloat64: &res.RequiredAttributeFloat64,
+		RequiredAttributeString:  &res.RequiredAttributeString,
+		RequiredAttributeBytes:   res.RequiredAttributeBytes,
+		RequiredAttributeAny:     res.RequiredAttributeAny,
+		Ignored:                  res.Ignored,
+	}
+	return vres
 }
 
 func (p *Payload) GetAttributeBoolean() *bool {
@@ -139,6 +265,102 @@ func (p *Payload) GetRequiredAttributeBytes() []byte {
 }
 
 func (p *Payload) GetRequiredAttributeAny() interface{} {
+	return p.RequiredAttributeAny
+}
+
+func (p *Result) GetAttributeBoolean() *bool {
+	return p.AttributeBoolean
+}
+
+func (p *Result) GetAttributeInt() *int {
+	return p.AttributeInt
+}
+
+func (p *Result) GetAttributeInt32() *int32 {
+	return p.AttributeInt32
+}
+
+func (p *Result) GetAttributeInt64() *int64 {
+	return p.AttributeInt64
+}
+
+func (p *Result) GetAttributeUInt() *uint {
+	return p.AttributeUInt
+}
+
+func (p *Result) GetAttributeUInt32() *uint32 {
+	return p.AttributeUInt32
+}
+
+func (p *Result) GetAttributeUInt64() *uint64 {
+	return p.AttributeUInt64
+}
+
+func (p *Result) GetAttributeFloat32() *float32 {
+	return p.AttributeFloat32
+}
+
+func (p *Result) GetAttributeFloat64() *float64 {
+	return p.AttributeFloat64
+}
+
+func (p *Result) GetAttributeString() *string {
+	return p.AttributeString
+}
+
+func (p *Result) GetAttributeBytes() []byte {
+	return p.AttributeBytes
+}
+
+func (p *Result) GetAttributeAny() interface{} {
+	return p.AttributeAny
+}
+
+func (p *Result) GetRequiredAttributeBoolean() bool {
+	return p.RequiredAttributeBoolean
+}
+
+func (p *Result) GetRequiredAttributeInt() int {
+	return p.RequiredAttributeInt
+}
+
+func (p *Result) GetRequiredAttributeInt32() int32 {
+	return p.RequiredAttributeInt32
+}
+
+func (p *Result) GetRequiredAttributeInt64() int64 {
+	return p.RequiredAttributeInt64
+}
+
+func (p *Result) GetRequiredAttributeUInt() uint {
+	return p.RequiredAttributeUInt
+}
+
+func (p *Result) GetRequiredAttributeUInt32() uint32 {
+	return p.RequiredAttributeUInt32
+}
+
+func (p *Result) GetRequiredAttributeUInt64() uint64 {
+	return p.RequiredAttributeUInt64
+}
+
+func (p *Result) GetRequiredAttributeFloat32() float32 {
+	return p.RequiredAttributeFloat32
+}
+
+func (p *Result) GetRequiredAttributeFloat64() float64 {
+	return p.RequiredAttributeFloat64
+}
+
+func (p *Result) GetRequiredAttributeString() string {
+	return p.RequiredAttributeString
+}
+
+func (p *Result) GetRequiredAttributeBytes() []byte {
+	return p.RequiredAttributeBytes
+}
+
+func (p *Result) GetRequiredAttributeAny() interface{} {
 	return p.RequiredAttributeAny
 }
 `
