@@ -68,6 +68,9 @@ func serviceAttributeGetter(f *codegen.File) {
 		}
 		fm := codegen.TemplateFuncs()
 		obj := expr.AsObject(dt)
+		if obj == nil {
+			continue
+		}
 		for _, nat := range *obj {
 			if !mustGenerate(nat.Attribute.Meta) {
 				continue
@@ -98,6 +101,9 @@ func serviceAttributeGetter(f *codegen.File) {
 		}
 		fm := codegen.TemplateFuncs()
 		obj := expr.AsObject(dt)
+		if obj == nil {
+			continue
+		}
 		for _, nat := range *obj {
 			if !mustGenerate(nat.Attribute.Meta) {
 				continue
