@@ -3,7 +3,7 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 h1:MGKhKyiYrvMDZsmLR/+RGffQSXwEkXgfLSA08qDn9AI=
 github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598/go.mod h1:0FpDmbrt36utu8jEmeU05dPC9AB5tsLYVVi+ZHfyuwI=
-github.com/getkin/kin-openapi v0.90.0 h1:k0MeVmRSdKDjqJbyYghK3GkVL59s6bow46s2rNLD9d4=
+github.com/getkin/kin-openapi v0.91.0 h1:mOSAljTAQONM0YVtI3+LvIQaa0zPwa3SH6UuiyEnbYQ=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/go-openapi/jsonpointer v0.19.5 h1:gZr+CIYByUqjcgeLXnQu2gHYQC9o73G2XUeOFYEICuY=
 github.com/go-openapi/swag v0.19.13 h1:233UVgMy1DlmCYYfOiFpta6e2urloh+sEs5id6lyzog=
@@ -37,8 +37,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea h1:CyhwejzVGvZ3Q2PSbQ4NRRYn+ZWv5eS1vlaEusT+bAI=
 github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea/go.mod h1:eNr558nEUjP8acGw8FFjTeWvSgU1stO7FAO6eknhHe4=
-goa.design/goa/v3 v3.6.0 h1:sjOlBL3b4zC1sCdFuv26leFTJGbk48nLRhhTr1suyFA=
-goa.design/goa/v3 v3.6.0/go.mod h1:Dmdfd7lWtKpCzpf5HWjvx63ds/lltkbOu4vJSGePq7k=
+goa.design/goa/v3 v3.6.1 h1:txzclQTALSTaHwILplFCNgdwHkcbVzi6699EE6RLTPI=
+goa.design/goa/v3 v3.6.1/go.mod h1:83kRxZirkLliAosKTdAOICV9sv7rd/6xIl1/RaicD8c=
 golang.org/x/mod v0.5.1 h1:OJxoQ/rynoF0dcCdI7cLPktw/hR2cueqYfjm43oqK38=
 golang.org/x/mod v0.5.1/go.mod h1:5OXOZSfqPIIbmVBIIKWRFfZjPR0E5r58TLhUjH0a2Ro=
 golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9 h1:nhht2DYV/Sn3qOayu8lM+cU1ii9sTLUeBQwQQfUHtrs=
