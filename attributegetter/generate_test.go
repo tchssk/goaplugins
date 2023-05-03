@@ -27,15 +27,17 @@ func TestService(t *testing.T) {
 			if len(expr.Root.Services) != 1 {
 				t.Fatalf("got %d services, expected 1", len(expr.Root.Services))
 			}
-			fs := service.File("", expr.Root.Services[0])
+			fs := service.Files("", expr.Root.Services[0], make(map[string][]string))
 			if fs == nil {
 				t.Fatalf("got nil file, expected not nil")
 			}
-			attributegetter.Generate("", []eval.Root{expr.Root}, []*codegen.File{fs})
+			attributegetter.Generate("", []eval.Root{expr.Root}, fs)
 			buf := new(bytes.Buffer)
-			for _, s := range fs.SectionTemplates[1:] {
-				if err := s.Write(buf); err != nil {
-					t.Fatal(err)
+			for _, f := range fs {
+				for _, s := range f.SectionTemplates[1:] {
+					if err := s.Write(buf); err != nil {
+						t.Fatal(err)
+					}
 				}
 			}
 			bs, err := format.Source(buf.Bytes())
