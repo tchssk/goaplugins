@@ -2,7 +2,7 @@ module github.com/tchssk/goaplugins/v3
 
 go 1.19
 
-require goa.design/goa/v3 v3.8.3
+require goa.design/goa/v3 v3.8.4
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
