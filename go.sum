@@ -3,7 +3,7 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 h1:MGKhKyiYrvMDZsmLR/+RGffQSXwEkXgfLSA08qDn9AI=
 github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598/go.mod h1:0FpDmbrt36utu8jEmeU05dPC9AB5tsLYVVi+ZHfyuwI=
-github.com/getkin/kin-openapi v0.98.0 h1:lIACvCG9cxmFsEywz+LCoVhcZHFLUy+Nv5QSkb43eAE=
+github.com/getkin/kin-openapi v0.103.0 h1:F5wAtaQvPWxKCAYZ69LgHAThgu16p4u41VQtbn1U8LA=
 github.com/go-openapi/jsonpointer v0.19.5 h1:gZr+CIYByUqjcgeLXnQu2gHYQC9o73G2XUeOFYEICuY=
 github.com/go-openapi/swag v0.19.13 h1:233UVgMy1DlmCYYfOiFpta6e2urloh+sEs5id6lyzog=
 github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 h1:OL2d27ueTKnlQJoqLW2fc9pWYulFnJYLWzomGV7HqZo=
@@ -42,10 +42,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea h1:CyhwejzVGvZ3Q2PSbQ4NRRYn+ZWv5eS1vlaEusT+bAI=
 github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea/go.mod h1:eNr558nEUjP8acGw8FFjTeWvSgU1stO7FAO6eknhHe4=
-goa.design/goa/v3 v3.8.4 h1:kQw/uqfoBpLUrRoMGk26xZFATs05vLavhMGKDc8kusA=
-goa.design/goa/v3 v3.8.4/go.mod h1:WVTAOi9ypvh2MOux4g6LKohAk3Vomv5r0A//fZrnLO8=
-goa.design/goa/v3 v3.8.5 h1:Y0/6ZwmwZftqQBOlBANU9mP4R+h2gIQUyfQMEs98pGU=
-goa.design/goa/v3 v3.8.5/go.mod h1:+tEl2wNEL54TMAQQ5Mu5il1zl20/7k89XMUv8hVJfa8=
+goa.design/goa/v3 v3.8.6 h1:KspS814f6D44gjMFKFN5TRbdFJvBFFt/M6qJNdEKNXw=
+goa.design/goa/v3 v3.8.6/go.mod h1:lgFS8pt76ubyi/K72CxwpAMmxfnS+T08gG8hPTaasNA=
 golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 h1:6zppjxzCulZykYSLyVDYbneBfbaBIQPYMevg0bEwv2s=
 golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4/go.mod h1:jJ57K6gSWd91VN4djpZkiMVwK6gcyfeH4XE8wZrZaV4=
 golang.org/x/sys v0.0.0-20220803195053-6e608f9ce704 h1:Y7NOhdqIOU8kYI7BxsgL38d0ot0raxvcW+EMQU2QrT4=
