@@ -1,6 +1,6 @@
 module github.com/tchssk/goaplugins/v3
 
-go 1.19
+go 1.20
 
 require goa.design/goa/v3 v3.11.0
 
