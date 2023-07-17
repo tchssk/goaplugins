@@ -38,8 +38,8 @@ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJy
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea h1:CyhwejzVGvZ3Q2PSbQ4NRRYn+ZWv5eS1vlaEusT+bAI=
 github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea/go.mod h1:eNr558nEUjP8acGw8FFjTeWvSgU1stO7FAO6eknhHe4=
-goa.design/goa/v3 v3.12.0 h1:OTfvMRofyK/KZVPhoueU1H8YV1R50Y21hB4fVQ1k818=
-goa.design/goa/v3 v3.12.0/go.mod h1:Z8VC1DbC5+YSki8QLdshb43GeRd2t0m6F7nbR9DYQdI=
+goa.design/goa/v3 v3.12.1 h1:HOAhGmVKXlPpWGgGjCtcrFb2FwqrDl98s5D8whA5obg=
+goa.design/goa/v3 v3.12.1/go.mod h1:Z8VC1DbC5+YSki8QLdshb43GeRd2t0m6F7nbR9DYQdI=
 golang.org/x/mod v0.12.0 h1:rmsUpXtvNzj340zd98LZ4KntptpfRHwpFOHG188oHXc=
 golang.org/x/mod v0.12.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
 golang.org/x/sync v0.3.0 h1:ftCYgMx6zT/asHUrPw8BLLscYtGznsLAnjq5RH9P66E=
