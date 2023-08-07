@@ -63,8 +63,8 @@ type Payload struct {
 
 var EncodeDecodeWithOptionalBodyCode = `// EncodeMethod1Response returns an encoder for responses returned by the
 // Service1 Method1 endpoint.
-func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
-	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
 		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
@@ -72,8 +72,8 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod1Request returns a decoder for requests sent to the Service1
 // Method1 endpoint.
-func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
-	return func(r *http.Request) (interface{}, error) {
+func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
 		var (
 			body      Method1RequestBody
 			emptyBody bool
@@ -104,8 +104,8 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 
 // EncodeMethod2Response returns an encoder for responses returned by the
 // Service1 Method2 endpoint.
-func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
-	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
 		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
@@ -113,8 +113,8 @@ func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod2Request returns a decoder for requests sent to the Service1
 // Method2 endpoint.
-func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
-	return func(r *http.Request) (interface{}, error) {
+func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
 		var (
 			body Method2RequestBody
 			err  error
@@ -139,8 +139,8 @@ func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 
 var EncodeDecodeWithoutOptionalBodyCode = `// EncodeMethod1Response returns an encoder for responses returned by the
 // Service2 Method1 endpoint.
-func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
-	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
 		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
@@ -148,8 +148,8 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod1Request returns a decoder for requests sent to the Service2
 // Method1 endpoint.
-func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
-	return func(r *http.Request) (interface{}, error) {
+func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
 		var (
 			body Method1RequestBody
 			err  error

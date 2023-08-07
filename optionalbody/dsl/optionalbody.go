@@ -15,7 +15,7 @@ import (
 //
 // OptionalBody must appear in a Method HTTP expression.
 //
-func OptionalBody(args ...interface{}) {
+func OptionalBody(args ...any) {
 	e, ok := eval.Current().(*goaexpr.HTTPEndpointExpr)
 	if !ok {
 		eval.IncompatibleDSL()

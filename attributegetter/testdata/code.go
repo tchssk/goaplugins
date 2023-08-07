@@ -30,7 +30,7 @@ type Payload struct {
 	AttributeFloat64         *float64
 	AttributeString          *string
 	AttributeBytes           []byte
-	AttributeAny             interface{}
+	AttributeAny             any
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
 	RequiredAttributeInt32   int32
@@ -42,7 +42,7 @@ type Payload struct {
 	RequiredAttributeFloat64 float64
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
-	RequiredAttributeAny     interface{}
+	RequiredAttributeAny     any
 	Ignored                  *string
 }
 
@@ -59,7 +59,7 @@ type Result struct {
 	AttributeFloat64         *float64
 	AttributeString          *string
 	AttributeBytes           []byte
-	AttributeAny             interface{}
+	AttributeAny             any
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
 	RequiredAttributeInt32   int32
@@ -71,7 +71,7 @@ type Result struct {
 	RequiredAttributeFloat64 float64
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
-	RequiredAttributeAny     interface{}
+	RequiredAttributeAny     any
 	Ignored                  *string
 }
 
@@ -216,7 +216,7 @@ func (p *Payload) GetAttributeBytes() []byte {
 	return p.AttributeBytes
 }
 
-func (p *Payload) GetAttributeAny() interface{} {
+func (p *Payload) GetAttributeAny() any {
 	return p.AttributeAny
 }
 
@@ -264,7 +264,7 @@ func (p *Payload) GetRequiredAttributeBytes() []byte {
 	return p.RequiredAttributeBytes
 }
 
-func (p *Payload) GetRequiredAttributeAny() interface{} {
+func (p *Payload) GetRequiredAttributeAny() any {
 	return p.RequiredAttributeAny
 }
 
@@ -312,7 +312,7 @@ func (p *Result) GetAttributeBytes() []byte {
 	return p.AttributeBytes
 }
 
-func (p *Result) GetAttributeAny() interface{} {
+func (p *Result) GetAttributeAny() any {
 	return p.AttributeAny
 }
 
@@ -360,7 +360,7 @@ func (p *Result) GetRequiredAttributeBytes() []byte {
 	return p.RequiredAttributeBytes
 }
 
-func (p *Result) GetRequiredAttributeAny() interface{} {
+func (p *Result) GetRequiredAttributeAny() any {
 	return p.RequiredAttributeAny
 }
 `
