@@ -2,8 +2,9 @@ package testdata
 
 var SimpleCode = `// Server lists the Service service endpoint HTTP handlers.
 type Server struct {
-	Mounts []*MountPoint
-	Method http.Handler
+	Mounts  []*MountPoint
+	Method1 http.Handler
+	Method2 http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -33,10 +34,13 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Method", "GET", "/foo"},
-			{"Method", "GET", "/foo/"},
+			{"Method1", "GET", "/foo"},
+			{"Method1", "GET", "/foo/"},
+			{"Method2", "GET", "/foo/{param1}"},
+			{"Method2", "GET", "/foo/{param1}/"},
 		},
-		Method: NewMethodHandler(e.Method, mux, decoder, encoder, errhandler, formatter),
+		Method1: NewMethod1Handler(e.Method1, mux, decoder, encoder, errhandler, formatter),
+		Method2: NewMethod2Handler(e.Method2, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -45,7 +49,8 @@ func (s *Server) Service() string { return "Service" }
 
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
-	s.Method = m(s.Method)
+	s.Method1 = m(s.Method1)
+	s.Method2 = m(s.Method2)
 }
 
 // MethodNames returns the methods served.
@@ -53,7 +58,8 @@ func (s *Server) MethodNames() []string { return service.MethodNames[:] }
 
 // Mount configures the mux to serve the Service endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
-	MountMethodHandler(mux, h.Method)
+	MountMethod1Handler(mux, h.Method1)
+	MountMethod2Handler(mux, h.Method2)
 }
 
 // Mount configures the mux to serve the Service endpoints.
@@ -61,9 +67,9 @@ func (s *Server) Mount(mux goahttp.Muxer) {
 	Mount(mux, s)
 }
 
-// MountMethodHandler configures the mux to serve the "Service" service
-// "Method" endpoint.
-func MountMethodHandler(mux goahttp.Muxer, h http.Handler) {
+// MountMethod1Handler configures the mux to serve the "Service" service
+// "Method1" endpoint.
+func MountMethod1Handler(mux goahttp.Muxer, h http.Handler) {
 	f, ok := h.(http.HandlerFunc)
 	if !ok {
 		f = func(w http.ResponseWriter, r *http.Request) {
@@ -74,9 +80,9 @@ func MountMethodHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/foo/", f)
 }
 
-// NewMethodHandler creates a HTTP handler which loads the HTTP request and
-// calls the "Service" service "Method" endpoint.
-func NewMethodHandler(
+// NewMethod1Handler creates a HTTP handler which loads the HTTP request and
+// calls the "Service" service "Method1" endpoint.
+func NewMethod1Handler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
 	decoder func(*http.Request) goahttp.Decoder,
@@ -85,12 +91,12 @@ func NewMethodHandler(
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		encodeResponse = EncodeMethodResponse(encoder)
+		encodeResponse = EncodeMethod1Response(encoder)
 		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "Method")
+		ctx = context.WithValue(ctx, goa.MethodKey, "Method1")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "Service")
 		var err error
 		res, err := endpoint(ctx, nil)
@@ -106,12 +112,89 @@ func NewMethodHandler(
 	})
 }
 
-// EncodeMethodResponse returns an encoder for responses returned by the
-// Service Method endpoint.
-func EncodeMethodResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+// MountMethod2Handler configures the mux to serve the "Service" service
+// "Method2" endpoint.
+func MountMethod2Handler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/foo/{param1}", f)
+	mux.Handle("GET", "/foo/{param1}/", f)
+}
+
+// NewMethod2Handler creates a HTTP handler which loads the HTTP request and
+// calls the "Service" service "Method2" endpoint.
+func NewMethod2Handler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeMethod2Request(mux, decoder)
+		encodeResponse = EncodeMethod2Response(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "Method2")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "Service")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// EncodeMethod1Response returns an encoder for responses returned by the
+// Service Method1 endpoint.
+func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
 	return func(ctx context.Context, w http.ResponseWriter, v any) error {
 		w.WriteHeader(http.StatusNoContent)
 		return nil
+	}
+}
+
+// EncodeMethod2Response returns an encoder for responses returned by the
+// Service Method2 endpoint.
+func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
+}
+
+// DecodeMethod2Request returns a decoder for requests sent to the Service
+// Method2 endpoint.
+func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			param1 string
+
+			params = mux.Vars(r)
+		)
+		param1 = params["param1"]
+		payload := NewMethod2Payload(param1)
+
+		return payload, nil
 	}
 }
 `

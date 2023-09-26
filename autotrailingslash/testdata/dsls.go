@@ -6,9 +6,17 @@ import (
 
 var SingleServiceDSL = func() {
 	Service("Service", func() {
-		Method("Method", func() {
+		Method("Method1", func() {
 			HTTP(func() {
-				GET("foo")
+				GET("/foo")
+			})
+		})
+		Method("Method2", func() {
+			Payload(func() {
+				Attribute("param1")
+			})
+			HTTP(func() {
+				GET("/foo/{param1}")
 			})
 		})
 	})
