@@ -19,5 +19,13 @@ var SingleServiceDSL = func() {
 				GET("/foo/{param1}")
 			})
 		})
+		Method("Method3", func() {
+			Payload(func() {
+				Attribute("param2")
+			})
+			HTTP(func() {
+				GET("/foo/{*param2}")
+			})
+		})
 	})
 }
