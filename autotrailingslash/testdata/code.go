@@ -40,7 +40,6 @@ func New(
 			{"Method2", "GET", "/foo/{param1}"},
 			{"Method2", "GET", "/foo/{param1}/"},
 			{"Method3", "GET", "/foo/{*param2}"},
-			{"Method3", "GET", "/foo/{*param2}/"},
 		},
 		Method1: NewMethod1Handler(e.Method1, mux, decoder, encoder, errhandler, formatter),
 		Method2: NewMethod2Handler(e.Method2, mux, decoder, encoder, errhandler, formatter),
@@ -180,7 +179,6 @@ func MountMethod3Handler(mux goahttp.Muxer, h http.Handler) {
 		}
 	}
 	mux.Handle("GET", "/foo/{*param2}", f)
-	mux.Handle("GET", "/foo/{*param2}/", f)
 }
 
 // NewMethod3Handler creates a HTTP handler which loads the HTTP request and

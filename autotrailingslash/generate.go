@@ -1,6 +1,8 @@
 package autotrailingslash
 
 import (
+	"strings"
+
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/eval"
 	"goa.design/goa/v3/expr"
@@ -27,6 +29,9 @@ func Prepare(genpkg string, roots []eval.Root) error {
 				for _, endpoint := range service.HTTPEndpoints {
 					var routes []*expr.RouteExpr
 					for _, route := range endpoint.Routes {
+						if strings.Contains(route.Path, "/{*") {
+							continue
+						}
 						routes = append(routes, &expr.RouteExpr{
 							Method:   route.Method,
 							Path:     route.Path + "/./",
