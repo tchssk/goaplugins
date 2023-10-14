@@ -9,6 +9,7 @@ var SingleServiceDSL = func() {
 		Method("Method1", func() {
 			HTTP(func() {
 				GET("/foo")
+				GET("/bar/")
 			})
 		})
 		Method("Method2", func() {
