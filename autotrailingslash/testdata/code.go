@@ -38,7 +38,6 @@ func New(
 			{"Method1", "GET", "/foo"},
 			{"Method1", "GET", "/bar/"},
 			{"Method1", "GET", "/foo/"},
-			{"Method1", "GET", "/bar/"},
 			{"Method2", "GET", "/foo/{param1}"},
 			{"Method2", "GET", "/foo/{param1}/"},
 			{"Method3", "GET", "/foo/{*param2}"},
@@ -86,7 +85,6 @@ func MountMethod1Handler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/foo", f)
 	mux.Handle("GET", "/bar/", f)
 	mux.Handle("GET", "/foo/", f)
-	mux.Handle("GET", "/bar/", f)
 }
 
 // NewMethod1Handler creates a HTTP handler which loads the HTTP request and

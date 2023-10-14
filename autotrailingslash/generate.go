@@ -29,6 +29,9 @@ func Prepare(genpkg string, roots []eval.Root) error {
 				for _, endpoint := range service.HTTPEndpoints {
 					var routes []*expr.RouteExpr
 					for _, route := range endpoint.Routes {
+						if strings.HasSuffix(route.Path, "/") {
+							continue
+						}
 						if strings.Contains(route.Path, "/{*") {
 							continue
 						}
