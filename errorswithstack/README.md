@@ -72,7 +72,7 @@ func ErrorLogger(logger *log.Logger) func(goa.Endpoint) goa.Endpoint {
 }
 ```
 
-The error's underlying concrete value is [`ServiceError`](https://pkg.go.dev/goa.design/goa/v3/pkg#ServiceError). You can also create conditions by making type assertion.
+The error's underlying concrete value is [`ServiceError`](https://pkg.go.dev/goa.design/goa/v3/pkg#ServiceError). You can also create conditions by making type assertion:
 
 ```go
 func ErrorLogger(logger *log.Logger) func(goa.Endpoint) goa.Endpoint {
@@ -81,12 +81,12 @@ func ErrorLogger(logger *log.Logger) func(goa.Endpoint) goa.Endpoint {
 			res, err := e(ctx, req)
 			if err != nil {
 				if serviceError, ok := err.(*goa.ServiceError); ok {
-               if serviceError.Fault {
+					if serviceError.Fault {
 						file, line, _, ok := withstack.GetOneLineSource(err)
 						if ok {
 							logger.Printf("%s:%d: %v", file, line, err) // file.go:15 something went wrong
 						}
-               }
+					}
 				}
 			}
 			return res, err
@@ -95,7 +95,7 @@ func ErrorLogger(logger *log.Logger) func(goa.Endpoint) goa.Endpoint {
 }
 ```
 
-You can also report errors to [Sentry](https://sentry.io) using [`report.ReportError`](https://pkg.go.dev/github.com/cockroachdb/errors/report#ReportError).
+You can also report errors to [Sentry](https://sentry.io) using [`report.ReportError`](https://pkg.go.dev/github.com/cockroachdb/errors/report#ReportError):
 
 ```go
 func ErrorReporter() func(goa.Endpoint) goa.Endpoint {
