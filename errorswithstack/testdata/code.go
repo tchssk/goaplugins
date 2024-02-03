@@ -12,6 +12,9 @@ type Service interface {
 // key.
 const ServiceName = "Service"
 
+// APIVersion is the version of the API as defined in the design.
+const APIVersion = "0.0.1"
+
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
