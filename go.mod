@@ -2,7 +2,7 @@ module github.com/tchssk/goaplugins/v3
 
 go 1.20
 
-require goa.design/goa/v3 v3.14.5
+require goa.design/goa/v3 v3.14.6
 
 require (
 	github.com/AnatolyRugalev/goregen v0.1.0 // indirect
