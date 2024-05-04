@@ -1,6 +1,7 @@
 package testdata
 
-var SimpleCode = `// Server lists the Service service endpoint HTTP handlers.
+var SimpleCode = `
+// Server lists the Service service endpoint HTTP handlers.
 type Server struct {
 	Mounts  []*MountPoint
 	Method1 http.Handler
