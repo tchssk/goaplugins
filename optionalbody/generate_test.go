@@ -34,7 +34,9 @@ func TestService(t *testing.T) {
 			if fs == nil {
 				t.Fatalf("got nil file, expected not nil")
 			}
-			optionalbody.Update("", []eval.Root{expr.Root}, fs)
+			if _, err := optionalbody.Update("", []eval.Root{expr.Root}, fs); err != nil {
+				t.Fatal(err)
+			}
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
 				for _, s := range f.SectionTemplates[1:] {
@@ -72,7 +74,9 @@ func TestEncodeDecode(t *testing.T) {
 			if len(fs) != 4 {
 				t.Fatalf("got %d files, expected two", len(fs))
 			}
-			optionalbody.Update("", []eval.Root{expr.Root}, fs)
+			if _, err := optionalbody.Update("", []eval.Root{expr.Root}, fs); err != nil {
+				t.Fatal(err)
+			}
 			buf := new(bytes.Buffer)
 			for _, s := range fs[c.File].SectionTemplates[1:] {
 				if err := s.Write(buf); err != nil {
@@ -108,7 +112,9 @@ func TestTypes(t *testing.T) {
 			if len(fs) != 2 {
 				t.Fatalf("got %d files, expected two", len(fs))
 			}
-			optionalbody.Update("", []eval.Root{expr.Root}, fs)
+			if _, err := optionalbody.Update("", []eval.Root{expr.Root}, fs); err != nil {
+				t.Fatal(err)
+			}
 			buf := new(bytes.Buffer)
 			for _, s := range fs[c.File].SectionTemplates[1:] {
 				if err := s.Write(buf); err != nil {

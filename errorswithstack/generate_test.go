@@ -31,7 +31,9 @@ func TestService(t *testing.T) {
 			if fs == nil {
 				t.Fatalf("got nil file, expected not nil")
 			}
-			errorswithstack.Generate("", []eval.Root{expr.Root}, fs)
+			if _, err := errorswithstack.Generate("", []eval.Root{expr.Root}, fs); err != nil {
+				t.Fatal(err)
+			}
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
 				for _, s := range f.SectionTemplates[1:] {
