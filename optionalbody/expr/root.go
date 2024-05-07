@@ -20,7 +20,9 @@ type (
 
 // Register design root with eval engine.
 func init() {
-	eval.Register(Root)
+	if err := eval.Register(Root); err != nil {
+		panic(err) // bug
+	}
 }
 
 // EvalName returns the name used in error messages.
