@@ -96,6 +96,10 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		err = decoder(r).Decode(&body)
 		if err != nil {
 			if err != io.EOF {
+				var gerr *goa.ServiceError
+				if errors.As(err, &gerr) {
+					return nil, gerr
+				}
 				return nil, goa.DecodePayloadError(err.Error())
 			}
 			emptyBody = true
@@ -138,6 +142,10 @@ func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			if err == io.EOF {
 				return nil, goa.MissingPayloadError()
 			}
+			var gerr *goa.ServiceError
+			if errors.As(err, &gerr) {
+				return nil, gerr
+			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
 		err = ValidateMethod2RequestBody(&body)
@@ -174,6 +182,10 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		if err != nil {
 			if err == io.EOF {
 				return nil, goa.MissingPayloadError()
+			}
+			var gerr *goa.ServiceError
+			if errors.As(err, &gerr) {
+				return nil, gerr
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
