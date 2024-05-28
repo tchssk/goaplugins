@@ -111,11 +111,19 @@ func update(f *codegen.File) {
 				err = nil
 			} else {
 	{{- end }}
+			var gerr *goa.ServiceError
+			if errors.As(err, &gerr) {
+				return nil, gerr
+			}
 			return nil, goa.DecodePayloadError(err.Error())
 	{{- if not .Payload.Request.MustHaveBody }}
 			}
 	{{- end }}`,
 				`			if err != io.EOF {
+				var gerr *goa.ServiceError
+				if errors.As(err, &gerr) {
+					return nil, gerr
+				}
 				return nil, goa.DecodePayloadError(err.Error())
 			}
 			emptyBody = true
