@@ -5,9 +5,9 @@ import (
 	"go/format"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash/testdata"
-	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/eval"
 	"goa.design/goa/v3/expr"
 	httpcodegen "goa.design/goa/v3/http/codegen"
@@ -44,9 +44,7 @@ func TestService(t *testing.T) {
 				t.Fatal(err)
 			}
 			code := string(bs)
-			if code != c.Code {
-				t.Errorf("%s: got\n%s\ngot vs. expected:\n%s", c.Name, code, codegen.Diff(t, code, c.Code))
-			}
+			assert.Equal(t, c.Code, code)
 		})
 	}
 }
