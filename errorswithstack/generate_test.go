@@ -5,6 +5,7 @@ import (
 	"go/format"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/tchssk/goaplugins/v3/errorswithstack"
 	"github.com/tchssk/goaplugins/v3/errorswithstack/testdata"
 	"goa.design/goa/v3/codegen"
@@ -47,9 +48,7 @@ func TestService(t *testing.T) {
 				t.Fatal(err)
 			}
 			code := string(bs)
-			if code != c.Code {
-				t.Errorf("%s: got\n%s\ngot vs. expected:\n%s", c.Name, code, codegen.Diff(t, code, c.Code))
-			}
+			assert.Equal(t, c.Code, code)
 		})
 	}
 }
