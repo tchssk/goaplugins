@@ -3,7 +3,7 @@ module github.com/tchssk/goaplugins/v3
 go 1.21.0
 
 require (
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	goa.design/goa/v3 v3.18.2
 )
 
