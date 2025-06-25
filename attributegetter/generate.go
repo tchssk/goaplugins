@@ -51,70 +51,74 @@ func serviceAttributeGetter(f *codegen.File) {
 		return
 	}
 	for _, section := range f.Section("service-payload") {
-		data, ok := section.Data.(*service.MethodData)
-		if !ok {
-			continue
-		}
-		method := svc.Method(data.Name)
-		if method == nil {
-			continue
-		}
-		if method.Payload.Type == expr.Empty {
-			continue
-		}
-		dt, ok := method.Payload.Type.(expr.UserType)
-		if !ok {
-			continue
-		}
-		fm := codegen.TemplateFuncs()
-		obj := expr.AsObject(dt)
-		if obj == nil {
-			continue
-		}
-		for _, nat := range *obj {
-			if !mustGenerate(nat.Attribute.Meta) {
-				continue
-			}
-			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:    "service-payload-method",
-				Source:  servicePayloadMethodT,
-				Data:    buildMethodPayloadData(method, nat, data.Payload, codegen.NewNameScope()),
-				FuncMap: fm,
-			})
-		}
+		appendSections(f, svc, section, "payload")
 	}
 	for _, section := range f.Section("service-result") {
-		data, ok := section.Data.(*service.MethodData)
-		if !ok {
+		appendSections(f, svc, section, "result")
+	}
+}
+
+func appendSections(f *codegen.File, svc *expr.ServiceExpr, section *codegen.SectionTemplate, typ string) {
+	data, ok := section.Data.(*service.MethodData)
+	if !ok {
+		return
+	}
+	method := svc.Method(data.Name)
+	if method == nil {
+		return
+	}
+	isPayload := typ == "payload"
+	dt, ok := getDataType(method, isPayload)
+	if !ok {
+		return
+	}
+	fm := codegen.TemplateFuncs()
+	obj := expr.AsObject(dt)
+	if obj == nil {
+		return
+	}
+	for _, nat := range *obj {
+		if !mustGenerate(nat.Attribute.Meta) {
 			continue
 		}
-		method := svc.Method(data.Name)
-		if method == nil {
-			continue
+		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
+			Name:    "service-" + typ + "-method",
+			Source:  getSource(isPayload),
+			Data:    getData(method, data, nat, isPayload),
+			FuncMap: fm,
+		})
+	}
+}
+
+func getDataType(method *expr.MethodExpr, isPayload bool) (expr.UserType, bool) {
+	if isPayload {
+		if method.Payload.Type == expr.Empty {
+			return nil, false
 		}
+		dt, ok := method.Payload.Type.(expr.UserType)
+		return dt, ok
+	} else {
 		if method.Result.Type == expr.Empty {
-			continue
+			return nil, false
 		}
 		dt, ok := method.Result.Type.(expr.UserType)
-		if !ok {
-			continue
-		}
-		fm := codegen.TemplateFuncs()
-		obj := expr.AsObject(dt)
-		if obj == nil {
-			continue
-		}
-		for _, nat := range *obj {
-			if !mustGenerate(nat.Attribute.Meta) {
-				continue
-			}
-			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:    "service-result-method",
-				Source:  serviceResultMethodT,
-				Data:    buildMethodResultData(method, nat, data.Result, codegen.NewNameScope()),
-				FuncMap: fm,
-			})
-		}
+		return dt, ok
+	}
+}
+
+func getSource(isPayload bool) string {
+	if isPayload {
+		return servicePayloadMethodT
+	} else {
+		return serviceResultMethodT
+	}
+}
+
+func getData(method *expr.MethodExpr, data *service.MethodData, nat *expr.NamedAttributeExpr, isPayload bool) any {
+	if isPayload {
+		return buildMethodPayloadData(method, nat, data.Payload, codegen.NewNameScope())
+	} else {
+		return buildMethodResultData(method, nat, data.Result, codegen.NewNameScope())
 	}
 }
 
