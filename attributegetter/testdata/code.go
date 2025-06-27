@@ -480,11 +480,11 @@ func (p *Child) GetAttributeBoolean() *bool {
 	return p.AttributeBoolean
 }
 
-func (p *Child) GetAttributeGrandChild() GrandChild {
+func (p *Child) GetAttributeGrandChild() *GrandChild {
 	return p.AttributeGrandChild
 }
 
-func (p *Child) GetRequiredAttributeGrandChild() GrandChild {
+func (p *Child) GetRequiredAttributeGrandChild() *GrandChild {
 	return p.RequiredAttributeGrandChild
 }
 

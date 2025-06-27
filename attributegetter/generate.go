@@ -201,7 +201,7 @@ func buildMethodResultData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr
 func buildMethodUserTypeData(parent *expr.AttributeExpr, nat *expr.NamedAttributeExpr, userType string, scope *codegen.NameScope) *MethodUserTypeData {
 	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
 	typ := scope.GoTypeName(nat.Attribute)
-	if parent.IsPrimitivePointer(nat.Name, true) {
+	if parent.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
 		typ = "*" + typ
 	}
 	return &MethodUserTypeData{
