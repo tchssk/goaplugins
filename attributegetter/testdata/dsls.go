@@ -5,6 +5,17 @@ import (
 )
 
 var SingleServiceDSL = func() {
+	var grandChild = Type("GrandChild", func() {
+		Attribute("AttributeBoolean", Boolean)
+	})
+	var child = Type("Child", func() {
+		Attribute("AttributeBoolean", Boolean)
+		Attribute("AttributeGrandChild", grandChild)
+		Attribute("RequiredAttributeGrandChild", grandChild)
+		Required(
+			"RequiredAttributeGrandChild",
+		)
+	})
 	var payload = Type("Payload", func() {
 		Attribute("AttributeBoolean", Boolean)
 		Attribute("AttributeInt", Int)
@@ -18,6 +29,7 @@ var SingleServiceDSL = func() {
 		Attribute("AttributeString", String)
 		Attribute("AttributeBytes", Bytes)
 		Attribute("AttributeAny", Any)
+		Attribute("AttributeChild", child)
 		Attribute("RequiredAttributeBoolean", Boolean)
 		Attribute("RequiredAttributeInt", Int)
 		Attribute("RequiredAttributeInt32", Int32)
@@ -30,6 +42,7 @@ var SingleServiceDSL = func() {
 		Attribute("RequiredAttributeString", String)
 		Attribute("RequiredAttributeBytes", Bytes)
 		Attribute("RequiredAttributeAny", Any)
+		Attribute("RequiredAttributeChild", child)
 		Attribute("Ignored", String, func() {
 			Meta("attributegetter:generate", "false")
 		})
@@ -46,6 +59,7 @@ var SingleServiceDSL = func() {
 			"RequiredAttributeString",
 			"RequiredAttributeBytes",
 			"RequiredAttributeAny",
+			"RequiredAttributeChild",
 		)
 	})
 	var result = ResultType("application/vnd.result", func() {
@@ -61,6 +75,7 @@ var SingleServiceDSL = func() {
 		Attribute("AttributeString", String)
 		Attribute("AttributeBytes", Bytes)
 		Attribute("AttributeAny", Any)
+		Attribute("AttributeChild", child)
 		Attribute("RequiredAttributeBoolean", Boolean)
 		Attribute("RequiredAttributeInt", Int)
 		Attribute("RequiredAttributeInt32", Int32)
@@ -73,6 +88,7 @@ var SingleServiceDSL = func() {
 		Attribute("RequiredAttributeString", String)
 		Attribute("RequiredAttributeBytes", Bytes)
 		Attribute("RequiredAttributeAny", Any)
+		Attribute("RequiredAttributeChild", child)
 		Attribute("Ignored", String, func() {
 			Meta("attributegetter:generate", "false")
 		})
@@ -89,6 +105,7 @@ var SingleServiceDSL = func() {
 			"RequiredAttributeString",
 			"RequiredAttributeBytes",
 			"RequiredAttributeAny",
+			"RequiredAttributeChild",
 		)
 	})
 	Service("Service", func() {
