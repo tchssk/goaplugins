@@ -22,6 +22,12 @@ type (
 		Type   string
 		Var    string
 	}
+	MethodUserTypeData struct {
+		UserType string
+		Name     string
+		Type     string
+		Var      string
+	}
 )
 
 func init() {
@@ -55,6 +61,32 @@ func serviceAttributeGetter(f *codegen.File) {
 	}
 	for _, section := range f.Section("service-result") {
 		appendSections(f, svc, section, false)
+	}
+	for _, section := range f.Section("service-user-type") {
+		data, ok := section.Data.(*service.UserTypeData)
+		if !ok {
+			return
+		}
+		if data.Type == expr.Empty {
+			return
+		}
+		dt := data.Type
+		fm := codegen.TemplateFuncs()
+		obj := expr.AsObject(dt)
+		if obj == nil {
+			return
+		}
+		for _, nat := range *obj {
+			if !mustGenerate(nat.Attribute.Meta) {
+				continue
+			}
+			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
+				Name:    "service-user-type-method",
+				Source:  serviceUserTypeMethodT,
+				Data:    buildMethodUserTypeData(dt.Attribute(), nat, dt.Name(), codegen.NewNameScope()),
+				FuncMap: fm,
+			})
+		}
 	}
 }
 
@@ -141,7 +173,7 @@ func mustGenerate(meta expr.MetaExpr) bool {
 func buildMethodPayloadData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, payload string, scope *codegen.NameScope) *MethodPayloadData {
 	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
 	typ := scope.GoTypeName(nat.Attribute)
-	if method.Payload.IsPrimitivePointer(nat.Name, true) {
+	if method.Payload.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
 		typ = "*" + typ
 	}
 	return &MethodPayloadData{
@@ -155,7 +187,7 @@ func buildMethodPayloadData(method *expr.MethodExpr, nat *expr.NamedAttributeExp
 func buildMethodResultData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, result string, scope *codegen.NameScope) *MethodResultData {
 	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
 	typ := scope.GoTypeName(nat.Attribute)
-	if method.Result.IsPrimitivePointer(nat.Name, true) {
+	if method.Result.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
 		typ = "*" + typ
 	}
 	return &MethodResultData{
@@ -163,6 +195,20 @@ func buildMethodResultData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr
 		Name:   name,
 		Type:   typ,
 		Var:    name,
+	}
+}
+
+func buildMethodUserTypeData(parent *expr.AttributeExpr, nat *expr.NamedAttributeExpr, userType string, scope *codegen.NameScope) *MethodUserTypeData {
+	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
+	typ := scope.GoTypeName(nat.Attribute)
+	if parent.IsPrimitivePointer(nat.Name, true) {
+		typ = "*" + typ
+	}
+	return &MethodUserTypeData{
+		UserType: userType,
+		Name:     name,
+		Type:     typ,
+		Var:      name,
 	}
 }
 
@@ -174,6 +220,12 @@ func (p *{{ .Payload }}) Get{{ .Name }}() {{ .Type }} {
 
 var serviceResultMethodT = `
 func (p *{{ .Result }}) Get{{ .Name }}() {{ .Type }} {
+	return p.{{ .Var }}
+}
+`
+
+var serviceUserTypeMethodT = `
+func (p *{{ .UserType }}) Get{{ .Name }}() {{ .Type }} {
 	return p.{{ .Var }}
 }
 `

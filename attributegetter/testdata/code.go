@@ -23,6 +23,16 @@ const ServiceName = "Service"
 // MethodKey key.
 var MethodNames = [1]string{"Method"}
 
+type Child struct {
+	AttributeBoolean            *bool
+	AttributeGrandChild         *GrandChild
+	RequiredAttributeGrandChild *GrandChild
+}
+
+type GrandChild struct {
+	AttributeBoolean *bool
+}
+
 // Payload is the payload type of the Service service Method method.
 type Payload struct {
 	AttributeBoolean         *bool
@@ -37,6 +47,7 @@ type Payload struct {
 	AttributeString          *string
 	AttributeBytes           []byte
 	AttributeAny             any
+	AttributeChild           *Child
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
 	RequiredAttributeInt32   int32
@@ -49,6 +60,7 @@ type Payload struct {
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     any
+	RequiredAttributeChild   *Child
 	Ignored                  *string
 }
 
@@ -66,6 +78,7 @@ type Result struct {
 	AttributeString          *string
 	AttributeBytes           []byte
 	AttributeAny             any
+	AttributeChild           *Child
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
 	RequiredAttributeInt32   int32
@@ -78,6 +91,7 @@ type Result struct {
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     any
+	RequiredAttributeChild   *Child
 	Ignored                  *string
 }
 
@@ -142,6 +156,12 @@ func newResult(vres *serviceviews.ResultView) *Result {
 	if vres.RequiredAttributeString != nil {
 		res.RequiredAttributeString = *vres.RequiredAttributeString
 	}
+	if vres.AttributeChild != nil {
+		res.AttributeChild = transformServiceviewsChildViewToChild(vres.AttributeChild)
+	}
+	if vres.RequiredAttributeChild != nil {
+		res.RequiredAttributeChild = transformServiceviewsChildViewToChild(vres.RequiredAttributeChild)
+	}
 	return res
 }
 
@@ -175,7 +195,77 @@ func newResultView(res *Result) *serviceviews.ResultView {
 		RequiredAttributeAny:     res.RequiredAttributeAny,
 		Ignored:                  res.Ignored,
 	}
+	if res.AttributeChild != nil {
+		vres.AttributeChild = transformChildToServiceviewsChildView(res.AttributeChild)
+	}
+	if res.RequiredAttributeChild != nil {
+		vres.RequiredAttributeChild = transformChildToServiceviewsChildView(res.RequiredAttributeChild)
+	}
 	return vres
+}
+
+// transformServiceviewsChildViewToChild builds a value of type *Child from a
+// value of type *serviceviews.ChildView.
+func transformServiceviewsChildViewToChild(v *serviceviews.ChildView) *Child {
+	if v == nil {
+		return nil
+	}
+	res := &Child{
+		AttributeBoolean: v.AttributeBoolean,
+	}
+	if v.AttributeGrandChild != nil {
+		res.AttributeGrandChild = transformServiceviewsGrandChildViewToGrandChild(v.AttributeGrandChild)
+	}
+	if v.RequiredAttributeGrandChild != nil {
+		res.RequiredAttributeGrandChild = transformServiceviewsGrandChildViewToGrandChild(v.RequiredAttributeGrandChild)
+	}
+
+	return res
+}
+
+// transformServiceviewsGrandChildViewToGrandChild builds a value of type
+// *GrandChild from a value of type *serviceviews.GrandChildView.
+func transformServiceviewsGrandChildViewToGrandChild(v *serviceviews.GrandChildView) *GrandChild {
+	if v == nil {
+		return nil
+	}
+	res := &GrandChild{
+		AttributeBoolean: v.AttributeBoolean,
+	}
+
+	return res
+}
+
+// transformChildToServiceviewsChildView builds a value of type
+// *serviceviews.ChildView from a value of type *Child.
+func transformChildToServiceviewsChildView(v *Child) *serviceviews.ChildView {
+	if v == nil {
+		return nil
+	}
+	res := &serviceviews.ChildView{
+		AttributeBoolean: v.AttributeBoolean,
+	}
+	if v.AttributeGrandChild != nil {
+		res.AttributeGrandChild = transformGrandChildToServiceviewsGrandChildView(v.AttributeGrandChild)
+	}
+	if v.RequiredAttributeGrandChild != nil {
+		res.RequiredAttributeGrandChild = transformGrandChildToServiceviewsGrandChildView(v.RequiredAttributeGrandChild)
+	}
+
+	return res
+}
+
+// transformGrandChildToServiceviewsGrandChildView builds a value of type
+// *serviceviews.GrandChildView from a value of type *GrandChild.
+func transformGrandChildToServiceviewsGrandChildView(v *GrandChild) *serviceviews.GrandChildView {
+	if v == nil {
+		return nil
+	}
+	res := &serviceviews.GrandChildView{
+		AttributeBoolean: v.AttributeBoolean,
+	}
+
+	return res
 }
 
 func (p *Payload) GetAttributeBoolean() *bool {
@@ -226,6 +316,10 @@ func (p *Payload) GetAttributeAny() any {
 	return p.AttributeAny
 }
 
+func (p *Payload) GetAttributeChild() *Child {
+	return p.AttributeChild
+}
+
 func (p *Payload) GetRequiredAttributeBoolean() bool {
 	return p.RequiredAttributeBoolean
 }
@@ -272,6 +366,10 @@ func (p *Payload) GetRequiredAttributeBytes() []byte {
 
 func (p *Payload) GetRequiredAttributeAny() any {
 	return p.RequiredAttributeAny
+}
+
+func (p *Payload) GetRequiredAttributeChild() *Child {
+	return p.RequiredAttributeChild
 }
 
 func (p *Result) GetAttributeBoolean() *bool {
@@ -322,6 +420,10 @@ func (p *Result) GetAttributeAny() any {
 	return p.AttributeAny
 }
 
+func (p *Result) GetAttributeChild() *Child {
+	return p.AttributeChild
+}
+
 func (p *Result) GetRequiredAttributeBoolean() bool {
 	return p.RequiredAttributeBoolean
 }
@@ -368,5 +470,25 @@ func (p *Result) GetRequiredAttributeBytes() []byte {
 
 func (p *Result) GetRequiredAttributeAny() any {
 	return p.RequiredAttributeAny
+}
+
+func (p *Result) GetRequiredAttributeChild() *Child {
+	return p.RequiredAttributeChild
+}
+
+func (p *Child) GetAttributeBoolean() *bool {
+	return p.AttributeBoolean
+}
+
+func (p *Child) GetAttributeGrandChild() GrandChild {
+	return p.AttributeGrandChild
+}
+
+func (p *Child) GetRequiredAttributeGrandChild() GrandChild {
+	return p.RequiredAttributeGrandChild
+}
+
+func (p *GrandChild) GetAttributeBoolean() *bool {
+	return p.AttributeBoolean
 }
 `
