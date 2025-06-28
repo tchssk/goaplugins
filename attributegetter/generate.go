@@ -46,29 +46,29 @@ func serviceAttributeGetter(f *codegen.File) {
 	for _, section := range f.Section("service-payload") {
 		data, ok := section.Data.(*service.MethodData)
 		if !ok {
-			return
+			continue
 		}
 		method := svc.Method(data.Name)
 		if method == nil {
-			return
+			continue
 		}
 		appendSections("service-payload-method", f, method.Payload, data.Payload)
 	}
 	for _, section := range f.Section("service-result") {
 		data, ok := section.Data.(*service.MethodData)
 		if !ok {
-			return
+			continue
 		}
 		method := svc.Method(data.Name)
 		if method == nil {
-			return
+			continue
 		}
 		appendSections("service-result-method", f, method.Result, data.Result)
 	}
 	for _, section := range f.Section("service-user-type") {
 		data, ok := section.Data.(*service.UserTypeData)
 		if !ok {
-			return
+			continue
 		}
 		appendSections("service-user-type-method", f, data.Type.Attribute(), data.Name)
 	}
