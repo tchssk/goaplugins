@@ -57,8 +57,8 @@ func serviceAttributeGetter(f *codegen.File) {
 		if data.Type == expr.Empty {
 			return
 		}
-		dt := data.Type
-		obj := expr.AsObject(dt)
+		userType := data.Type
+		obj := expr.AsObject(userType)
 		if obj == nil {
 			return
 		}
@@ -69,7 +69,7 @@ func serviceAttributeGetter(f *codegen.File) {
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 				Name:   "service-user-type-method",
 				Source: methodT,
-				Data:   buildMethodData(dt.Attribute(), nat, data.Name),
+				Data:   buildMethodData(userType.Attribute(), nat, data.Name),
 			})
 		}
 	}
@@ -84,11 +84,11 @@ func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, 
 	if method == nil {
 		return
 	}
-	dt, ok := getDataType(method, isPayload)
+	userType, ok := getDataType(method, isPayload)
 	if !ok {
 		return
 	}
-	obj := expr.AsObject(dt)
+	obj := expr.AsObject(userType)
 	if obj == nil {
 		return
 	}
