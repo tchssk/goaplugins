@@ -44,10 +44,10 @@ func serviceAttributeGetter(f *codegen.File) {
 		return
 	}
 	for _, section := range f.Section("service-payload") {
-		appendSections(f, svc, section, true)
+		appendSections("service-payload-method", f, svc, section, true)
 	}
 	for _, section := range f.Section("service-result") {
-		appendSections(f, svc, section, false)
+		appendSections("service-result-method", f, svc, section, false)
 	}
 	for _, section := range f.Section("service-user-type") {
 		data, ok := section.Data.(*service.UserTypeData)
@@ -70,14 +70,14 @@ func serviceAttributeGetter(f *codegen.File) {
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 				Name:    "service-user-type-method",
 				Source:  methodT,
-				Data:    buildMethodData(dt.Attribute(), nat, dt.Name(), codegen.NewNameScope()),
+				Data:    buildMethodData(dt.Attribute(), nat, data.Name, codegen.NewNameScope()),
 				FuncMap: fm,
 			})
 		}
 	}
 }
 
-func appendSections(f *codegen.File, svc *expr.ServiceExpr, section *codegen.SectionTemplate, isPayload bool) {
+func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, section *codegen.SectionTemplate, isPayload bool) {
 	data, ok := section.Data.(*service.MethodData)
 	if !ok {
 		return
@@ -100,7 +100,7 @@ func appendSections(f *codegen.File, svc *expr.ServiceExpr, section *codegen.Sec
 			continue
 		}
 		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-			Name:    getName(isPayload),
+			Name:    sectionName,
 			Source:  methodT,
 			Data:    getData(method, data, nat, isPayload),
 			FuncMap: fm,
@@ -121,14 +121,6 @@ func getDataType(method *expr.MethodExpr, isPayload bool) (expr.UserType, bool) 
 		}
 		dt, ok := method.Result.Type.(expr.UserType)
 		return dt, ok
-	}
-}
-
-func getName(isPayload bool) string {
-	if isPayload {
-		return "service-payload-method"
-	} else {
-		return "service-result-method"
 	}
 }
 
