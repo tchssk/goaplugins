@@ -44,66 +44,45 @@ func serviceAttributeGetter(f *codegen.File) {
 		return
 	}
 	for _, section := range f.Section("service-payload") {
-		appendSections("service-payload-method", f, svc, section, true)
+		data, ok := section.Data.(*service.MethodData)
+		if !ok {
+			return
+		}
+		method := svc.Method(data.Name)
+		if method == nil {
+			return
+		}
+		appendSections("service-payload-method", f, method.Payload, data.Payload)
 	}
 	for _, section := range f.Section("service-result") {
-		appendSections("service-result-method", f, svc, section, false)
+		data, ok := section.Data.(*service.MethodData)
+		if !ok {
+			return
+		}
+		method := svc.Method(data.Name)
+		if method == nil {
+			return
+		}
+		appendSections("service-result-method", f, method.Result, data.Result)
 	}
 	for _, section := range f.Section("service-user-type") {
 		data, ok := section.Data.(*service.UserTypeData)
 		if !ok {
 			return
 		}
-		if err := codegen.WalkMappedAttr(expr.NewMappedAttributeExpr(data.Type.Attribute()), func(name, elem string, required bool, a *expr.AttributeExpr) error {
-			if !mustGenerate(a.Meta) {
-				return nil
-			}
-			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:   "service-user-type-method",
-				Source: methodT,
-				Data:   buildMethodData(data.Type.Attribute(), name, a, data.Name),
-			})
-			return nil
-		}); err != nil {
-			return
-		}
+		appendSections("service-user-type-method", f, data.Type.Attribute(), data.Name)
 	}
 }
 
-func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, section *codegen.SectionTemplate, isPayload bool) {
-	data, ok := section.Data.(*service.MethodData)
-	if !ok {
-		return
-	}
-	method := svc.Method(data.Name)
-	if method == nil {
-		return
-	}
-	var att *expr.AttributeExpr
-	if isPayload {
-		att = method.Payload
-	} else {
-		att = method.Result
-	}
+func appendSections(sectionName string, f *codegen.File, att *expr.AttributeExpr, baseType string) {
 	if err := codegen.WalkMappedAttr(expr.NewMappedAttributeExpr(att), func(name, elem string, required bool, a *expr.AttributeExpr) error {
 		if !mustGenerate(a.Meta) {
 			return nil
 		}
-		var (
-			parent   *expr.AttributeExpr
-			baseType string
-		)
-		if isPayload {
-			parent = method.Payload
-			baseType = data.Payload
-		} else {
-			parent = method.Result
-			baseType = data.Result
-		}
 		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 			Name:   sectionName,
 			Source: methodT,
-			Data:   buildMethodData(parent, name, a, baseType),
+			Data:   buildMethodData(att, name, a, baseType),
 		})
 		return nil
 	}); err != nil {
