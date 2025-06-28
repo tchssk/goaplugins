@@ -96,10 +96,21 @@ func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, 
 		if !mustGenerate(nat.Attribute.Meta) {
 			continue
 		}
+		var (
+			parent   *expr.AttributeExpr
+			baseType string
+		)
+		if isPayload {
+			parent = method.Payload
+			baseType = data.Payload
+		} else {
+			parent = method.Result
+			baseType = data.Result
+		}
 		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 			Name:   sectionName,
 			Source: methodT,
-			Data:   getData(method, data, nat, isPayload),
+			Data:   buildMethodData(parent, nat, baseType),
 		})
 	}
 }
@@ -117,14 +128,6 @@ func getDataType(method *expr.MethodExpr, isPayload bool) (expr.UserType, bool) 
 		}
 		dt, ok := method.Result.Type.(expr.UserType)
 		return dt, ok
-	}
-}
-
-func getData(method *expr.MethodExpr, data *service.MethodData, nat *expr.NamedAttributeExpr, isPayload bool) any {
-	if isPayload {
-		return buildMethodData(method.Payload, nat, data.Payload)
-	} else {
-		return buildMethodData(method.Result, nat, data.Result)
 	}
 }
 
