@@ -58,7 +58,6 @@ func serviceAttributeGetter(f *codegen.File) {
 			return
 		}
 		dt := data.Type
-		fm := codegen.TemplateFuncs()
 		obj := expr.AsObject(dt)
 		if obj == nil {
 			return
@@ -68,10 +67,9 @@ func serviceAttributeGetter(f *codegen.File) {
 				continue
 			}
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:    "service-user-type-method",
-				Source:  methodT,
-				Data:    buildMethodData(dt.Attribute(), nat, data.Name, codegen.NewNameScope()),
-				FuncMap: fm,
+				Name:   "service-user-type-method",
+				Source: methodT,
+				Data:   buildMethodData(dt.Attribute(), nat, data.Name, codegen.NewNameScope()),
 			})
 		}
 	}
@@ -90,7 +88,6 @@ func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, 
 	if !ok {
 		return
 	}
-	fm := codegen.TemplateFuncs()
 	obj := expr.AsObject(dt)
 	if obj == nil {
 		return
@@ -100,10 +97,9 @@ func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, 
 			continue
 		}
 		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-			Name:    sectionName,
-			Source:  methodT,
-			Data:    getData(method, data, nat, isPayload),
-			FuncMap: fm,
+			Name:   sectionName,
+			Source: methodT,
+			Data:   getData(method, data, nat, isPayload),
 		})
 	}
 }
