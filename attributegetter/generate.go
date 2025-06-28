@@ -10,23 +10,10 @@ import (
 )
 
 type (
-	MethodPayloadData struct {
-		Payload string
-		Name    string
-		Type    string
-		Var     string
-	}
-	MethodResultData struct {
-		Result string
-		Name   string
-		Type   string
-		Var    string
-	}
-	MethodUserTypeData struct {
-		UserType string
+	MethodData struct {
+		BaseType string
 		Name     string
 		Type     string
-		Var      string
 	}
 )
 
@@ -57,107 +44,49 @@ func serviceAttributeGetter(f *codegen.File) {
 		return
 	}
 	for _, section := range f.Section("service-payload") {
-		appendSections(f, svc, section, true)
+		data, ok := section.Data.(*service.MethodData)
+		if !ok {
+			continue
+		}
+		method := svc.Method(data.Name)
+		if method == nil {
+			continue
+		}
+		appendSections("service-payload-method", f, method.Payload, data.Payload)
 	}
 	for _, section := range f.Section("service-result") {
-		appendSections(f, svc, section, false)
+		data, ok := section.Data.(*service.MethodData)
+		if !ok {
+			continue
+		}
+		method := svc.Method(data.Name)
+		if method == nil {
+			continue
+		}
+		appendSections("service-result-method", f, method.Result, data.Result)
 	}
 	for _, section := range f.Section("service-user-type") {
 		data, ok := section.Data.(*service.UserTypeData)
 		if !ok {
-			return
-		}
-		if data.Type == expr.Empty {
-			return
-		}
-		dt := data.Type
-		fm := codegen.TemplateFuncs()
-		obj := expr.AsObject(dt)
-		if obj == nil {
-			return
-		}
-		for _, nat := range *obj {
-			if !mustGenerate(nat.Attribute.Meta) {
-				continue
-			}
-			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:    "service-user-type-method",
-				Source:  serviceUserTypeMethodT,
-				Data:    buildMethodUserTypeData(dt.Attribute(), nat, dt.Name(), codegen.NewNameScope()),
-				FuncMap: fm,
-			})
-		}
-	}
-}
-
-func appendSections(f *codegen.File, svc *expr.ServiceExpr, section *codegen.SectionTemplate, isPayload bool) {
-	data, ok := section.Data.(*service.MethodData)
-	if !ok {
-		return
-	}
-	method := svc.Method(data.Name)
-	if method == nil {
-		return
-	}
-	dt, ok := getDataType(method, isPayload)
-	if !ok {
-		return
-	}
-	fm := codegen.TemplateFuncs()
-	obj := expr.AsObject(dt)
-	if obj == nil {
-		return
-	}
-	for _, nat := range *obj {
-		if !mustGenerate(nat.Attribute.Meta) {
 			continue
 		}
+		appendSections("service-user-type-method", f, data.Type.Attribute(), data.Name)
+	}
+}
+
+func appendSections(sectionName string, f *codegen.File, att *expr.AttributeExpr, baseType string) {
+	if err := codegen.WalkMappedAttr(expr.NewMappedAttributeExpr(att), func(name, elem string, required bool, a *expr.AttributeExpr) error {
+		if !mustGenerate(a.Meta) {
+			return nil
+		}
 		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-			Name:    getName(isPayload),
-			Source:  getSource(isPayload),
-			Data:    getData(method, data, nat, isPayload),
-			FuncMap: fm,
+			Name:   sectionName,
+			Source: methodT,
+			Data:   buildMethodData(att, name, a, baseType),
 		})
-	}
-}
-
-func getDataType(method *expr.MethodExpr, isPayload bool) (expr.UserType, bool) {
-	if isPayload {
-		if method.Payload.Type == expr.Empty {
-			return nil, false
-		}
-		dt, ok := method.Payload.Type.(expr.UserType)
-		return dt, ok
-	} else {
-		if method.Result.Type == expr.Empty {
-			return nil, false
-		}
-		dt, ok := method.Result.Type.(expr.UserType)
-		return dt, ok
-	}
-}
-
-func getName(isPayload bool) string {
-	if isPayload {
-		return "service-payload-method"
-	} else {
-		return "service-result-method"
-	}
-}
-
-func getSource(isPayload bool) string {
-	if isPayload {
-		return servicePayloadMethodT
-	} else {
-		return serviceResultMethodT
-	}
-}
-
-func getData(method *expr.MethodExpr, data *service.MethodData, nat *expr.NamedAttributeExpr, isPayload bool) any {
-	if isPayload {
-		return buildMethodPayloadData(method, nat, data.Payload, codegen.NewNameScope())
-	} else {
-		return buildMethodResultData(method, nat, data.Result, codegen.NewNameScope())
+		return nil
+	}); err != nil {
+		return
 	}
 }
 
@@ -170,62 +99,21 @@ func mustGenerate(meta expr.MetaExpr) bool {
 	return true
 }
 
-func buildMethodPayloadData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, payload string, scope *codegen.NameScope) *MethodPayloadData {
-	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
-	typ := scope.GoTypeName(nat.Attribute)
-	if method.Payload.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
+func buildMethodData(parent *expr.AttributeExpr, name string, att *expr.AttributeExpr, baseType string) *MethodData {
+	scope := codegen.NewNameScope()
+	typ := scope.GoTypeName(att)
+	if parent.IsPrimitivePointer(name, true) || !expr.IsPrimitive(att.Type) {
 		typ = "*" + typ
 	}
-	return &MethodPayloadData{
-		Payload: payload,
-		Name:    name,
-		Type:    typ,
-		Var:     name,
-	}
-}
-
-func buildMethodResultData(method *expr.MethodExpr, nat *expr.NamedAttributeExpr, result string, scope *codegen.NameScope) *MethodResultData {
-	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
-	typ := scope.GoTypeName(nat.Attribute)
-	if method.Result.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
-		typ = "*" + typ
-	}
-	return &MethodResultData{
-		Result: result,
-		Name:   name,
-		Type:   typ,
-		Var:    name,
-	}
-}
-
-func buildMethodUserTypeData(parent *expr.AttributeExpr, nat *expr.NamedAttributeExpr, userType string, scope *codegen.NameScope) *MethodUserTypeData {
-	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
-	typ := scope.GoTypeName(nat.Attribute)
-	if parent.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
-		typ = "*" + typ
-	}
-	return &MethodUserTypeData{
-		UserType: userType,
-		Name:     name,
+	return &MethodData{
+		BaseType: baseType,
+		Name:     codegen.GoifyAtt(att, name, true),
 		Type:     typ,
-		Var:      name,
 	}
 }
 
-var servicePayloadMethodT = `
-func (p *{{ .Payload }}) Get{{ .Name }}() {{ .Type }} {
-	return p.{{ .Var }}
-}
-`
-
-var serviceResultMethodT = `
-func (p *{{ .Result }}) Get{{ .Name }}() {{ .Type }} {
-	return p.{{ .Var }}
-}
-`
-
-var serviceUserTypeMethodT = `
-func (p *{{ .UserType }}) Get{{ .Name }}() {{ .Type }} {
-	return p.{{ .Var }}
+var methodT = `
+func (p *{{ .BaseType }}) Get{{ .Name }}() {{ .Type }} {
+	return p.{{ .Name }}
 }
 `
