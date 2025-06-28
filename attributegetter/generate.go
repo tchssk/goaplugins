@@ -69,7 +69,7 @@ func serviceAttributeGetter(f *codegen.File) {
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 				Name:   "service-user-type-method",
 				Source: methodT,
-				Data:   buildMethodData(dt.Attribute(), nat, data.Name, codegen.NewNameScope()),
+				Data:   buildMethodData(dt.Attribute(), nat, data.Name),
 			})
 		}
 	}
@@ -122,9 +122,9 @@ func getDataType(method *expr.MethodExpr, isPayload bool) (expr.UserType, bool) 
 
 func getData(method *expr.MethodExpr, data *service.MethodData, nat *expr.NamedAttributeExpr, isPayload bool) any {
 	if isPayload {
-		return buildMethodData(method.Payload, nat, data.Payload, codegen.NewNameScope())
+		return buildMethodData(method.Payload, nat, data.Payload)
 	} else {
-		return buildMethodData(method.Result, nat, data.Result, codegen.NewNameScope())
+		return buildMethodData(method.Result, nat, data.Result)
 	}
 }
 
@@ -137,7 +137,8 @@ func mustGenerate(meta expr.MetaExpr) bool {
 	return true
 }
 
-func buildMethodData(parent *expr.AttributeExpr, nat *expr.NamedAttributeExpr, baseType string, scope *codegen.NameScope) *MethodData {
+func buildMethodData(parent *expr.AttributeExpr, nat *expr.NamedAttributeExpr, baseType string) *MethodData {
+	scope := codegen.NewNameScope()
 	name := codegen.GoifyAtt(nat.Attribute, nat.Name, true)
 	typ := scope.GoTypeName(nat.Attribute)
 	if parent.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
