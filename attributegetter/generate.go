@@ -54,23 +54,18 @@ func serviceAttributeGetter(f *codegen.File) {
 		if !ok {
 			return
 		}
-		if data.Type == expr.Empty {
-			return
-		}
-		userType := data.Type
-		obj := expr.AsObject(userType)
-		if obj == nil {
-			return
-		}
-		for _, nat := range *obj {
-			if !mustGenerate(nat.Attribute.Meta) {
-				continue
+		if err := codegen.WalkMappedAttr(expr.NewMappedAttributeExpr(data.Type.Attribute()), func(name, elem string, required bool, a *expr.AttributeExpr) error {
+			if !mustGenerate(a.Meta) {
+				return nil
 			}
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 				Name:   "service-user-type-method",
 				Source: methodT,
-				Data:   buildMethodData(userType.Attribute(), nat, data.Name),
+				Data:   buildMethodData(data.Type.Attribute(), name, a, data.Name),
 			})
+			return nil
+		}); err != nil {
+			return
 		}
 	}
 }
@@ -84,17 +79,15 @@ func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, 
 	if method == nil {
 		return
 	}
-	userType, ok := getDataType(method, isPayload)
-	if !ok {
-		return
+	var att *expr.AttributeExpr
+	if isPayload {
+		att = method.Payload
+	} else {
+		att = method.Result
 	}
-	obj := expr.AsObject(userType)
-	if obj == nil {
-		return
-	}
-	for _, nat := range *obj {
-		if !mustGenerate(nat.Attribute.Meta) {
-			continue
+	if err := codegen.WalkMappedAttr(expr.NewMappedAttributeExpr(att), func(name, elem string, required bool, a *expr.AttributeExpr) error {
+		if !mustGenerate(a.Meta) {
+			return nil
 		}
 		var (
 			parent   *expr.AttributeExpr
@@ -110,24 +103,11 @@ func appendSections(sectionName string, f *codegen.File, svc *expr.ServiceExpr, 
 		f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
 			Name:   sectionName,
 			Source: methodT,
-			Data:   buildMethodData(parent, nat, baseType),
+			Data:   buildMethodData(parent, name, a, baseType),
 		})
-	}
-}
-
-func getDataType(method *expr.MethodExpr, isPayload bool) (expr.UserType, bool) {
-	if isPayload {
-		if method.Payload.Type == expr.Empty {
-			return nil, false
-		}
-		dt, ok := method.Payload.Type.(expr.UserType)
-		return dt, ok
-	} else {
-		if method.Result.Type == expr.Empty {
-			return nil, false
-		}
-		dt, ok := method.Result.Type.(expr.UserType)
-		return dt, ok
+		return nil
+	}); err != nil {
+		return
 	}
 }
 
@@ -140,15 +120,15 @@ func mustGenerate(meta expr.MetaExpr) bool {
 	return true
 }
 
-func buildMethodData(parent *expr.AttributeExpr, nat *expr.NamedAttributeExpr, baseType string) *MethodData {
+func buildMethodData(parent *expr.AttributeExpr, name string, att *expr.AttributeExpr, baseType string) *MethodData {
 	scope := codegen.NewNameScope()
-	typ := scope.GoTypeName(nat.Attribute)
-	if parent.IsPrimitivePointer(nat.Name, true) || !expr.IsPrimitive(nat.Attribute.Type) {
+	typ := scope.GoTypeName(att)
+	if parent.IsPrimitivePointer(name, true) || !expr.IsPrimitive(att.Type) {
 		typ = "*" + typ
 	}
 	return &MethodData{
 		BaseType: baseType,
-		Name:     codegen.GoifyAtt(nat.Attribute, nat.Name, true),
+		Name:     codegen.GoifyAtt(att, name, true),
 		Type:     typ,
 	}
 }
