@@ -74,7 +74,6 @@ type Payload struct {
 `
 
 var EncodeDecodeWithOptionalBodyCode = `
-
 // EncodeMethod1Response returns an encoder for responses returned by the
 // Service1 Method1 endpoint.
 func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
@@ -160,7 +159,6 @@ func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 `
 
 var EncodeDecodeWithoutOptionalBodyCode = `
-
 // EncodeMethod1Response returns an encoder for responses returned by the
 // Service2 Method1 endpoint.
 func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
