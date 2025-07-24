@@ -9,7 +9,6 @@ import (
 	"github.com/tchssk/goaplugins/v3/autotrailingslash"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash/testdata"
 	"goa.design/goa/v3/eval"
-	"goa.design/goa/v3/expr"
 	httpcodegen "goa.design/goa/v3/http/codegen"
 )
 
@@ -23,11 +22,12 @@ func TestService(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
-			httpcodegen.RunHTTPDSL(t, c.DSL)
-			if err := autotrailingslash.Prepare("", []eval.Root{expr.Root}); err != nil {
+			root := httpcodegen.RunHTTPDSL(t, c.DSL)
+			if err := autotrailingslash.Prepare("", []eval.Root{root}); err != nil {
 				t.Fatal(err)
 			}
-			fs := httpcodegen.ServerFiles("", expr.Root)
+			services := httpcodegen.CreateHTTPServices(root)
+			fs := httpcodegen.ServerFiles("", services)
 			if fs == nil {
 				t.Fatalf("got nil file, expected not nil")
 			}

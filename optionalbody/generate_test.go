@@ -11,7 +11,6 @@ import (
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
-	"goa.design/goa/v3/expr"
 	httpcodegen "goa.design/goa/v3/http/codegen"
 )
 
@@ -27,15 +26,16 @@ func TestService(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
-			codegen.RunDSL(t, c.DSL)
-			if len(expr.Root.Services) != 2 {
-				t.Fatalf("got %d services, expected 2", len(expr.Root.Services))
+			root := codegen.RunDSL(t, c.DSL)
+			if len(root.Services) != 2 {
+				t.Fatalf("got %d services, expected 2", len(root.Services))
 			}
-			fs := service.Files("", expr.Root.Services[c.Service], make(map[string][]string))
+			services := service.NewServicesData(root)
+			fs := service.Files("", root.Services[c.Service], services, make(map[string][]string))
 			if fs == nil {
 				t.Fatalf("got nil file, expected not nil")
 			}
-			if _, err := optionalbody.Update("", []eval.Root{expr.Root}, fs); err != nil {
+			if _, err := optionalbody.Update("", []eval.Root{root}, fs); err != nil {
 				t.Fatal(err)
 			}
 			buf := new(bytes.Buffer)
@@ -68,12 +68,13 @@ func TestEncodeDecode(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
-			codegen.RunDSL(t, c.DSL)
-			fs := httpcodegen.ServerFiles("", expr.Root)
+			root := codegen.RunDSL(t, c.DSL)
+			services := httpcodegen.CreateHTTPServices(root)
+			fs := httpcodegen.ServerFiles("", services)
 			if len(fs) != 4 {
 				t.Fatalf("got %d files, expected two", len(fs))
 			}
-			if _, err := optionalbody.Update("", []eval.Root{expr.Root}, fs); err != nil {
+			if _, err := optionalbody.Update("", []eval.Root{root}, fs); err != nil {
 				t.Fatal(err)
 			}
 			buf := new(bytes.Buffer)
@@ -104,12 +105,20 @@ func TestTypes(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
-			codegen.RunDSL(t, c.DSL)
-			fs := httpcodegen.ServerTypeFiles("", expr.Root)
+			root := codegen.RunDSL(t, c.DSL)
+			services := httpcodegen.CreateHTTPServices(root)
+			var files []*codegen.File
+			fs := httpcodegen.ServerFiles("", services)
+			if len(fs) != 4 {
+				t.Fatalf("got %d files, expected two", len(fs))
+			}
+			files = append(files, fs...)
+			fs = httpcodegen.ServerTypeFiles("", services)
 			if len(fs) != 2 {
 				t.Fatalf("got %d files, expected two", len(fs))
 			}
-			if _, err := optionalbody.Update("", []eval.Root{expr.Root}, fs); err != nil {
+			files = append(files, fs...)
+			if _, err := optionalbody.Update("", []eval.Root{root}, files); err != nil {
 				t.Fatal(err)
 			}
 			buf := new(bytes.Buffer)

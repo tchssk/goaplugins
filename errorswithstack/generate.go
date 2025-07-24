@@ -15,34 +15,40 @@ func init() {
 }
 
 func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
-	for _, f := range files {
-		if filepath.Base(f.Path) != "service.go" {
+	for _, r := range roots {
+		root, ok := r.(*expr.RootExpr)
+		if !ok {
 			continue
 		}
-		var svc *expr.ServiceExpr
-		for _, section := range f.Section("service") {
-			data, ok := section.Data.(*service.Data)
-			if !ok {
+		for _, f := range files {
+			if filepath.Base(f.Path) != "service.go" {
 				continue
 			}
-			svc = expr.Root.Service(data.Name)
-		}
-		if svc == nil {
-			continue
-		}
-		for _, section := range f.Section("source-header") {
-			data, ok := section.Data.(map[string]any)
-			if !ok {
+			var svc *expr.ServiceExpr
+			for _, section := range f.Section("service") {
+				data, ok := section.Data.(*service.Data)
+				if !ok {
+					continue
+				}
+				svc = root.Service(data.Name)
+			}
+			if svc == nil {
 				continue
 			}
-			imports, ok := data["Imports"].([]*codegen.ImportSpec)
-			if !ok {
-				continue
+			for _, section := range f.Section("source-header") {
+				data, ok := section.Data.(map[string]any)
+				if !ok {
+					continue
+				}
+				imports, ok := data["Imports"].([]*codegen.ImportSpec)
+				if !ok {
+					continue
+				}
+				data["Imports"] = append(imports, codegen.SimpleImport("github.com/cockroachdb/errors/withstack"))
 			}
-			data["Imports"] = append(imports, codegen.SimpleImport("github.com/cockroachdb/errors/withstack"))
-		}
-		for _, section := range f.Section("error-init-func") {
-			section.Source = strings.ReplaceAll(section.Source, "err,", "withstack.WithStackDepth(err, 1),")
+			for _, section := range f.Section("error-init-func") {
+				section.Source = strings.ReplaceAll(section.Source, "err,", "withstack.WithStackDepth(err, 1),")
+			}
 		}
 	}
 	return files, nil

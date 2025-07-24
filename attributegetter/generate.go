@@ -22,13 +22,19 @@ func init() {
 }
 
 func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
-	for _, f := range files {
-		serviceAttributeGetter(f)
+	for _, root := range roots {
+		r, ok := root.(*expr.RootExpr)
+		if !ok {
+			continue
+		}
+		for _, f := range files {
+			serviceAttributeGetter(f, r)
+		}
 	}
 	return files, nil
 }
 
-func serviceAttributeGetter(f *codegen.File) {
+func serviceAttributeGetter(f *codegen.File, root *expr.RootExpr) {
 	if filepath.Base(f.Path) != "service.go" {
 		return
 	}
@@ -38,7 +44,7 @@ func serviceAttributeGetter(f *codegen.File) {
 		if !ok {
 			return
 		}
-		svc = expr.Root.Service(data.Name)
+		svc = root.Service(data.Name)
 	}
 	if svc == nil {
 		return
