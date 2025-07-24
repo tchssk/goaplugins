@@ -109,13 +109,15 @@ func NewMethod1Handler(
 		var err error
 		res, err := endpoint(ctx, nil)
 		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
 				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			errhandler(ctx, w, err)
+			if errhandler != nil {
+				errhandler(ctx, w, err)
+			}
 		}
 	})
 }
@@ -154,20 +156,22 @@ func NewMethod2Handler(
 		ctx = context.WithValue(ctx, goa.ServiceKey, "Service")
 		payload, err := decodeRequest(r)
 		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
 				errhandler(ctx, w, err)
 			}
 			return
 		}
 		res, err := endpoint(ctx, payload)
 		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
 				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			errhandler(ctx, w, err)
+			if errhandler != nil {
+				errhandler(ctx, w, err)
+			}
 		}
 	})
 }
@@ -205,20 +209,22 @@ func NewMethod3Handler(
 		ctx = context.WithValue(ctx, goa.ServiceKey, "Service")
 		payload, err := decodeRequest(r)
 		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
 				errhandler(ctx, w, err)
 			}
 			return
 		}
 		res, err := endpoint(ctx, payload)
 		if err != nil {
-			if err := encodeError(ctx, w, err); err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
 				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			errhandler(ctx, w, err)
+			if errhandler != nil {
+				errhandler(ctx, w, err)
+			}
 		}
 	})
 }

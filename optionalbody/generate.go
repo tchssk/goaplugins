@@ -103,11 +103,11 @@ func update(f *codegen.File) {
 			)
 			section.Source = strings.Replace(section.Source,
 				`	{{- if .Payload.Request.MustHaveBody }}
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return nil, goa.MissingPayloadError()
 			}
 	{{- else }}
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				err = nil
 			} else {
 	{{- end }}
@@ -119,7 +119,7 @@ func update(f *codegen.File) {
 	{{- if not .Payload.Request.MustHaveBody }}
 			}
 	{{- end }}`,
-				`			if err != io.EOF {
+				`			if !errors.Is(err, io.EOF) {
 				var gerr *goa.ServiceError
 				if errors.As(err, &gerr) {
 					return nil, gerr
