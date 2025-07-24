@@ -94,7 +94,7 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		)
 		err = decoder(r).Decode(&body)
 		if err != nil {
-			if err != io.EOF {
+			if !errors.Is(err, io.EOF) {
 				var gerr *goa.ServiceError
 				if errors.As(err, &gerr) {
 					return nil, gerr
@@ -138,7 +138,7 @@ func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		)
 		err = decoder(r).Decode(&body)
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return nil, goa.MissingPayloadError()
 			}
 			var gerr *goa.ServiceError
@@ -178,7 +178,7 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		)
 		err = decoder(r).Decode(&body)
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return nil, goa.MissingPayloadError()
 			}
 			var gerr *goa.ServiceError
