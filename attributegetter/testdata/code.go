@@ -48,6 +48,7 @@ type Payload struct {
 	AttributeBytes           []byte
 	AttributeAny             any
 	AttributeArray           []string
+	AttributeMap             map[string]string
 	AttributeChild           *Child
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
@@ -62,6 +63,7 @@ type Payload struct {
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     any
 	RequiredAttributeArray   []string
+	RequiredAttributeMap     map[string]string
 	RequiredAttributeChild   *Child
 	Ignored                  *string
 }
@@ -81,6 +83,7 @@ type Result struct {
 	AttributeBytes           []byte
 	AttributeAny             any
 	AttributeArray           []string
+	AttributeMap             map[string]string
 	AttributeChild           *Child
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
@@ -95,6 +98,7 @@ type Result struct {
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     any
 	RequiredAttributeArray   []string
+	RequiredAttributeMap     map[string]string
 	RequiredAttributeChild   *Child
 	Ignored                  *string
 }
@@ -166,6 +170,14 @@ func newResult(vres *serviceviews.ResultView) *Result {
 			res.AttributeArray[i] = val
 		}
 	}
+	if vres.AttributeMap != nil {
+		res.AttributeMap = make(map[string]string, len(vres.AttributeMap))
+		for key, val := range vres.AttributeMap {
+			tk := key
+			tv := val
+			res.AttributeMap[tk] = tv
+		}
+	}
 	if vres.AttributeChild != nil {
 		res.AttributeChild = transformServiceviewsChildViewToChild(vres.AttributeChild)
 	}
@@ -173,6 +185,14 @@ func newResult(vres *serviceviews.ResultView) *Result {
 		res.RequiredAttributeArray = make([]string, len(vres.RequiredAttributeArray))
 		for i, val := range vres.RequiredAttributeArray {
 			res.RequiredAttributeArray[i] = val
+		}
+	}
+	if vres.RequiredAttributeMap != nil {
+		res.RequiredAttributeMap = make(map[string]string, len(vres.RequiredAttributeMap))
+		for key, val := range vres.RequiredAttributeMap {
+			tk := key
+			tv := val
+			res.RequiredAttributeMap[tk] = tv
 		}
 	}
 	if vres.RequiredAttributeChild != nil {
@@ -217,6 +237,14 @@ func newResultView(res *Result) *serviceviews.ResultView {
 			vres.AttributeArray[i] = val
 		}
 	}
+	if res.AttributeMap != nil {
+		vres.AttributeMap = make(map[string]string, len(res.AttributeMap))
+		for key, val := range res.AttributeMap {
+			tk := key
+			tv := val
+			vres.AttributeMap[tk] = tv
+		}
+	}
 	if res.AttributeChild != nil {
 		vres.AttributeChild = transformChildToServiceviewsChildView(res.AttributeChild)
 	}
@@ -227,6 +255,14 @@ func newResultView(res *Result) *serviceviews.ResultView {
 		}
 	} else {
 		vres.RequiredAttributeArray = []string{}
+	}
+	if res.RequiredAttributeMap != nil {
+		vres.RequiredAttributeMap = make(map[string]string, len(res.RequiredAttributeMap))
+		for key, val := range res.RequiredAttributeMap {
+			tk := key
+			tv := val
+			vres.RequiredAttributeMap[tk] = tv
+		}
 	}
 	if res.RequiredAttributeChild != nil {
 		vres.RequiredAttributeChild = transformChildToServiceviewsChildView(res.RequiredAttributeChild)
@@ -350,6 +386,10 @@ func (p *Payload) GetAttributeArray() []string {
 	return p.AttributeArray
 }
 
+func (p *Payload) GetAttributeMap() map[string]string {
+	return p.AttributeMap
+}
+
 func (p *Payload) GetAttributeChild() *Child {
 	return p.AttributeChild
 }
@@ -404,6 +444,10 @@ func (p *Payload) GetRequiredAttributeAny() any {
 
 func (p *Payload) GetRequiredAttributeArray() []string {
 	return p.RequiredAttributeArray
+}
+
+func (p *Payload) GetRequiredAttributeMap() map[string]string {
+	return p.RequiredAttributeMap
 }
 
 func (p *Payload) GetRequiredAttributeChild() *Child {
@@ -462,6 +506,10 @@ func (p *Result) GetAttributeArray() []string {
 	return p.AttributeArray
 }
 
+func (p *Result) GetAttributeMap() map[string]string {
+	return p.AttributeMap
+}
+
 func (p *Result) GetAttributeChild() *Child {
 	return p.AttributeChild
 }
@@ -516,6 +564,10 @@ func (p *Result) GetRequiredAttributeAny() any {
 
 func (p *Result) GetRequiredAttributeArray() []string {
 	return p.RequiredAttributeArray
+}
+
+func (p *Result) GetRequiredAttributeMap() map[string]string {
+	return p.RequiredAttributeMap
 }
 
 func (p *Result) GetRequiredAttributeChild() *Child {
