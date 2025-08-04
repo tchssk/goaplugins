@@ -39,9 +39,9 @@ type Payload struct {
 	AttributeInt             *int
 	AttributeInt32           *int32
 	AttributeInt64           *int64
-	AttributeUInt            *uint
-	AttributeUInt32          *uint32
-	AttributeUInt64          *uint64
+	AttributeUint            *uint
+	AttributeUint32          *uint32
+	AttributeUint64          *uint64
 	AttributeFloat32         *float32
 	AttributeFloat64         *float64
 	AttributeString          *string
@@ -52,9 +52,9 @@ type Payload struct {
 	RequiredAttributeInt     int
 	RequiredAttributeInt32   int32
 	RequiredAttributeInt64   int64
-	RequiredAttributeUInt    uint
-	RequiredAttributeUInt32  uint32
-	RequiredAttributeUInt64  uint64
+	RequiredAttributeUint    uint
+	RequiredAttributeUint32  uint32
+	RequiredAttributeUint64  uint64
 	RequiredAttributeFloat32 float32
 	RequiredAttributeFloat64 float64
 	RequiredAttributeString  string
@@ -70,9 +70,9 @@ type Result struct {
 	AttributeInt             *int
 	AttributeInt32           *int32
 	AttributeInt64           *int64
-	AttributeUInt            *uint
-	AttributeUInt32          *uint32
-	AttributeUInt64          *uint64
+	AttributeUint            *uint
+	AttributeUint32          *uint32
+	AttributeUint64          *uint64
 	AttributeFloat32         *float32
 	AttributeFloat64         *float64
 	AttributeString          *string
@@ -83,9 +83,9 @@ type Result struct {
 	RequiredAttributeInt     int
 	RequiredAttributeInt32   int32
 	RequiredAttributeInt64   int64
-	RequiredAttributeUInt    uint
-	RequiredAttributeUInt32  uint32
-	RequiredAttributeUInt64  uint64
+	RequiredAttributeUint    uint
+	RequiredAttributeUint32  uint32
+	RequiredAttributeUint64  uint64
 	RequiredAttributeFloat32 float32
 	RequiredAttributeFloat64 float64
 	RequiredAttributeString  string
@@ -114,9 +114,9 @@ func newResult(vres *serviceviews.ResultView) *Result {
 		AttributeInt:           vres.AttributeInt,
 		AttributeInt32:         vres.AttributeInt32,
 		AttributeInt64:         vres.AttributeInt64,
-		AttributeUInt:          vres.AttributeUInt,
-		AttributeUInt32:        vres.AttributeUInt32,
-		AttributeUInt64:        vres.AttributeUInt64,
+		AttributeUint:          vres.AttributeUint,
+		AttributeUint32:        vres.AttributeUint32,
+		AttributeUint64:        vres.AttributeUint64,
 		AttributeFloat32:       vres.AttributeFloat32,
 		AttributeFloat64:       vres.AttributeFloat64,
 		AttributeString:        vres.AttributeString,
@@ -138,14 +138,14 @@ func newResult(vres *serviceviews.ResultView) *Result {
 	if vres.RequiredAttributeInt64 != nil {
 		res.RequiredAttributeInt64 = *vres.RequiredAttributeInt64
 	}
-	if vres.RequiredAttributeUInt != nil {
-		res.RequiredAttributeUInt = *vres.RequiredAttributeUInt
+	if vres.RequiredAttributeUint != nil {
+		res.RequiredAttributeUint = *vres.RequiredAttributeUint
 	}
-	if vres.RequiredAttributeUInt32 != nil {
-		res.RequiredAttributeUInt32 = *vres.RequiredAttributeUInt32
+	if vres.RequiredAttributeUint32 != nil {
+		res.RequiredAttributeUint32 = *vres.RequiredAttributeUint32
 	}
-	if vres.RequiredAttributeUInt64 != nil {
-		res.RequiredAttributeUInt64 = *vres.RequiredAttributeUInt64
+	if vres.RequiredAttributeUint64 != nil {
+		res.RequiredAttributeUint64 = *vres.RequiredAttributeUint64
 	}
 	if vres.RequiredAttributeFloat32 != nil {
 		res.RequiredAttributeFloat32 = *vres.RequiredAttributeFloat32
@@ -173,9 +173,9 @@ func newResultView(res *Result) *serviceviews.ResultView {
 		AttributeInt:             res.AttributeInt,
 		AttributeInt32:           res.AttributeInt32,
 		AttributeInt64:           res.AttributeInt64,
-		AttributeUInt:            res.AttributeUInt,
-		AttributeUInt32:          res.AttributeUInt32,
-		AttributeUInt64:          res.AttributeUInt64,
+		AttributeUint:            res.AttributeUint,
+		AttributeUint32:          res.AttributeUint32,
+		AttributeUint64:          res.AttributeUint64,
 		AttributeFloat32:         res.AttributeFloat32,
 		AttributeFloat64:         res.AttributeFloat64,
 		AttributeString:          res.AttributeString,
@@ -185,9 +185,9 @@ func newResultView(res *Result) *serviceviews.ResultView {
 		RequiredAttributeInt:     &res.RequiredAttributeInt,
 		RequiredAttributeInt32:   &res.RequiredAttributeInt32,
 		RequiredAttributeInt64:   &res.RequiredAttributeInt64,
-		RequiredAttributeUInt:    &res.RequiredAttributeUInt,
-		RequiredAttributeUInt32:  &res.RequiredAttributeUInt32,
-		RequiredAttributeUInt64:  &res.RequiredAttributeUInt64,
+		RequiredAttributeUint:    &res.RequiredAttributeUint,
+		RequiredAttributeUint32:  &res.RequiredAttributeUint32,
+		RequiredAttributeUint64:  &res.RequiredAttributeUint64,
 		RequiredAttributeFloat32: &res.RequiredAttributeFloat32,
 		RequiredAttributeFloat64: &res.RequiredAttributeFloat64,
 		RequiredAttributeString:  &res.RequiredAttributeString,
@@ -284,16 +284,16 @@ func (p *Payload) GetAttributeInt64() *int64 {
 	return p.AttributeInt64
 }
 
-func (p *Payload) GetAttributeUInt() *uint {
-	return p.AttributeUInt
+func (p *Payload) GetAttributeUint() *uint {
+	return p.AttributeUint
 }
 
-func (p *Payload) GetAttributeUInt32() *uint32 {
-	return p.AttributeUInt32
+func (p *Payload) GetAttributeUint32() *uint32 {
+	return p.AttributeUint32
 }
 
-func (p *Payload) GetAttributeUInt64() *uint64 {
-	return p.AttributeUInt64
+func (p *Payload) GetAttributeUint64() *uint64 {
+	return p.AttributeUint64
 }
 
 func (p *Payload) GetAttributeFloat32() *float32 {
@@ -336,16 +336,16 @@ func (p *Payload) GetRequiredAttributeInt64() int64 {
 	return p.RequiredAttributeInt64
 }
 
-func (p *Payload) GetRequiredAttributeUInt() uint {
-	return p.RequiredAttributeUInt
+func (p *Payload) GetRequiredAttributeUint() uint {
+	return p.RequiredAttributeUint
 }
 
-func (p *Payload) GetRequiredAttributeUInt32() uint32 {
-	return p.RequiredAttributeUInt32
+func (p *Payload) GetRequiredAttributeUint32() uint32 {
+	return p.RequiredAttributeUint32
 }
 
-func (p *Payload) GetRequiredAttributeUInt64() uint64 {
-	return p.RequiredAttributeUInt64
+func (p *Payload) GetRequiredAttributeUint64() uint64 {
+	return p.RequiredAttributeUint64
 }
 
 func (p *Payload) GetRequiredAttributeFloat32() float32 {
@@ -388,16 +388,16 @@ func (p *Result) GetAttributeInt64() *int64 {
 	return p.AttributeInt64
 }
 
-func (p *Result) GetAttributeUInt() *uint {
-	return p.AttributeUInt
+func (p *Result) GetAttributeUint() *uint {
+	return p.AttributeUint
 }
 
-func (p *Result) GetAttributeUInt32() *uint32 {
-	return p.AttributeUInt32
+func (p *Result) GetAttributeUint32() *uint32 {
+	return p.AttributeUint32
 }
 
-func (p *Result) GetAttributeUInt64() *uint64 {
-	return p.AttributeUInt64
+func (p *Result) GetAttributeUint64() *uint64 {
+	return p.AttributeUint64
 }
 
 func (p *Result) GetAttributeFloat32() *float32 {
@@ -440,16 +440,16 @@ func (p *Result) GetRequiredAttributeInt64() int64 {
 	return p.RequiredAttributeInt64
 }
 
-func (p *Result) GetRequiredAttributeUInt() uint {
-	return p.RequiredAttributeUInt
+func (p *Result) GetRequiredAttributeUint() uint {
+	return p.RequiredAttributeUint
 }
 
-func (p *Result) GetRequiredAttributeUInt32() uint32 {
-	return p.RequiredAttributeUInt32
+func (p *Result) GetRequiredAttributeUint32() uint32 {
+	return p.RequiredAttributeUint32
 }
 
-func (p *Result) GetRequiredAttributeUInt64() uint64 {
-	return p.RequiredAttributeUInt64
+func (p *Result) GetRequiredAttributeUint64() uint64 {
+	return p.RequiredAttributeUint64
 }
 
 func (p *Result) GetRequiredAttributeFloat32() float32 {

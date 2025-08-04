@@ -21,9 +21,9 @@ var SingleServiceDSL = func() {
 		Attribute("attribute-int", Int)
 		Attribute("attribute-int32", Int32)
 		Attribute("attribute-int64", Int64)
-		Attribute("attribute-uInt", UInt)
-		Attribute("attribute-uInt32", UInt32)
-		Attribute("attribute-uInt64", UInt64)
+		Attribute("attribute-uint", UInt)
+		Attribute("attribute-uint32", UInt32)
+		Attribute("attribute-uint64", UInt64)
 		Attribute("attribute-float32", Float32)
 		Attribute("attribute-float64", Float64)
 		Attribute("attribute-string", String)
@@ -34,9 +34,9 @@ var SingleServiceDSL = func() {
 		Attribute("required-attribute-int", Int)
 		Attribute("required-attribute-int32", Int32)
 		Attribute("required-attribute-int64", Int64)
-		Attribute("required-attribute-uInt", UInt)
-		Attribute("required-attribute-uInt32", UInt32)
-		Attribute("required-attribute-uInt64", UInt64)
+		Attribute("required-attribute-uint", UInt)
+		Attribute("required-attribute-uint32", UInt32)
+		Attribute("required-attribute-uint64", UInt64)
 		Attribute("required-attribute-float32", Float32)
 		Attribute("required-attribute-float64", Float64)
 		Attribute("required-attribute-string", String)
@@ -51,9 +51,9 @@ var SingleServiceDSL = func() {
 			"required-attribute-int",
 			"required-attribute-int32",
 			"required-attribute-int64",
-			"required-attribute-uInt",
-			"required-attribute-uInt32",
-			"required-attribute-uInt64",
+			"required-attribute-uint",
+			"required-attribute-uint32",
+			"required-attribute-uint64",
 			"required-attribute-float32",
 			"required-attribute-float64",
 			"required-attribute-string",
@@ -67,9 +67,9 @@ var SingleServiceDSL = func() {
 		Attribute("attribute-int", Int)
 		Attribute("attribute-int32", Int32)
 		Attribute("attribute-int64", Int64)
-		Attribute("attribute-uInt", UInt)
-		Attribute("attribute-uInt32", UInt32)
-		Attribute("attribute-uInt64", UInt64)
+		Attribute("attribute-uint", UInt)
+		Attribute("attribute-uint32", UInt32)
+		Attribute("attribute-uint64", UInt64)
 		Attribute("attribute-float32", Float32)
 		Attribute("attribute-float64", Float64)
 		Attribute("attribute-string", String)
@@ -80,9 +80,9 @@ var SingleServiceDSL = func() {
 		Attribute("required-attribute-int", Int)
 		Attribute("required-attribute-int32", Int32)
 		Attribute("required-attribute-int64", Int64)
-		Attribute("required-attribute-uInt", UInt)
-		Attribute("required-attribute-uInt32", UInt32)
-		Attribute("required-attribute-uInt64", UInt64)
+		Attribute("required-attribute-uint", UInt)
+		Attribute("required-attribute-uint32", UInt32)
+		Attribute("required-attribute-uint64", UInt64)
 		Attribute("required-attribute-float32", Float32)
 		Attribute("required-attribute-float64", Float64)
 		Attribute("required-attribute-string", String)
@@ -97,9 +97,9 @@ var SingleServiceDSL = func() {
 			"required-attribute-int",
 			"required-attribute-int32",
 			"required-attribute-int64",
-			"required-attribute-uInt",
-			"required-attribute-uInt32",
-			"required-attribute-uInt64",
+			"required-attribute-uint",
+			"required-attribute-uint32",
+			"required-attribute-uint64",
 			"required-attribute-float32",
 			"required-attribute-float64",
 			"required-attribute-string",
