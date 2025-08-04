@@ -76,7 +76,7 @@ func serviceAttributeGetter(f *codegen.File, root *expr.RootExpr) {
 		if !ok {
 			continue
 		}
-		appendSections("service-user-type-method", f, data.Type.Attribute(), data.Name)
+		appendSections("service-user-type-method", f, data.Type.Attribute(), data.VarName)
 	}
 }
 
