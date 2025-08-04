@@ -590,3 +590,88 @@ func (p *GrandChild) GetAttributeBoolean() *bool {
 	return p.AttributeBoolean
 }
 `
+
+var ServiceWithCollectionCode = `
+// Service is the service service interface.
+type Service interface {
+	// Method implements method.
+	Method(context.Context) (res ResultCollection, err error)
+}
+
+// APIName is the name of the API as defined in the design.
+const APIName = "test api"
+
+// APIVersion is the version of the API as defined in the design.
+const APIVersion = "0.0.1"
+
+// ServiceName is the name of the service as defined in the design. This is the
+// same value that is set in the endpoint request contexts under the ServiceKey
+// key.
+const ServiceName = "service"
+
+// MethodNames lists the service method names as defined in the design. These
+// are the same values that are set in the endpoint request contexts under the
+// MethodKey key.
+var MethodNames = [1]string{"method"}
+
+type Result struct {
+	AttributeBoolean *bool
+}
+
+// ResultCollection is the result type of the service service method method.
+type ResultCollection []*Result
+
+// NewResultCollection initializes result type ResultCollection from viewed
+// result type ResultCollection.
+func NewResultCollection(vres serviceviews.ResultCollection) ResultCollection {
+	return newResultCollection(vres.Projected)
+}
+
+// NewViewedResultCollection initializes viewed result type ResultCollection
+// from result type ResultCollection using the given view.
+func NewViewedResultCollection(res ResultCollection, view string) serviceviews.ResultCollection {
+	p := newResultCollectionView(res)
+	return serviceviews.ResultCollection{Projected: p, View: "default"}
+}
+
+// newResultCollection converts projected type ResultCollection to service type
+// ResultCollection.
+func newResultCollection(vres serviceviews.ResultCollectionView) ResultCollection {
+	res := make(ResultCollection, len(vres))
+	for i, n := range vres {
+		res[i] = newResult(n)
+	}
+	return res
+}
+
+// newResultCollectionView projects result type ResultCollection to projected
+// type ResultCollectionView using the "default" view.
+func newResultCollectionView(res ResultCollection) serviceviews.ResultCollectionView {
+	vres := make(serviceviews.ResultCollectionView, len(res))
+	for i, n := range res {
+		vres[i] = newResultView(n)
+	}
+	return vres
+}
+
+// newResult converts projected type Result to service type Result.
+func newResult(vres *serviceviews.ResultView) *Result {
+	res := &Result{
+		AttributeBoolean: vres.AttributeBoolean,
+	}
+	return res
+}
+
+// newResultView projects result type Result to projected type ResultView using
+// the "default" view.
+func newResultView(res *Result) *serviceviews.ResultView {
+	vres := &serviceviews.ResultView{
+		AttributeBoolean: res.AttributeBoolean,
+	}
+	return vres
+}
+
+func (p *Result) GetAttributeBoolean() *bool {
+	return p.AttributeBoolean
+}
+`

@@ -130,3 +130,18 @@ var SingleServiceDSL = func() {
 		})
 	})
 }
+
+var ServiceWithCollectionDSL = func() {
+	var result = ResultType("application/vnd.result", func() {
+		Attribute("attribute-boolean", Boolean)
+	})
+	Service("service", func() {
+		Method("method", func() {
+			Payload(Empty)
+			Result(CollectionOf(result))
+			HTTP(func() {
+				GET("/")
+			})
+		})
+	})
+}
