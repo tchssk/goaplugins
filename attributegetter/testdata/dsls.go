@@ -5,10 +5,10 @@ import (
 )
 
 var SingleServiceDSL = func() {
-	var grandChild = Type("GrandChild", func() {
+	var grandChild = Type("grand-child", func() {
 		Attribute("attribute-boolean", Boolean)
 	})
-	var child = Type("Child", func() {
+	var child = Type("child", func() {
 		Attribute("attribute-boolean", Boolean)
 		Attribute("attribute-grand-child", grandChild)
 		Attribute("required-attribute-grand-child", grandChild)
@@ -16,7 +16,7 @@ var SingleServiceDSL = func() {
 			"required-attribute-grand-child",
 		)
 	})
-	var payload = Type("Payload", func() {
+	var payload = Type("payload", func() {
 		Attribute("attribute-boolean", Boolean)
 		Attribute("attribute-int", Int)
 		Attribute("attribute-int32", Int32)
