@@ -1,9 +1,9 @@
 package testdata
 
 var SimpleCode = `
-// Service is the Service service interface.
+// Service is the service service interface.
 type Service interface {
-	// Method implements Method.
+	// Method implements method.
 	Method(context.Context, *Payload) (res *Result, err error)
 }
 
@@ -16,12 +16,12 @@ const APIVersion = "0.0.1"
 // ServiceName is the name of the service as defined in the design. This is the
 // same value that is set in the endpoint request contexts under the ServiceKey
 // key.
-const ServiceName = "Service"
+const ServiceName = "service"
 
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"Method"}
+var MethodNames = [1]string{"method"}
 
 type Child struct {
 	AttributeBoolean            *bool
@@ -33,7 +33,7 @@ type GrandChild struct {
 	AttributeBoolean *bool
 }
 
-// Payload is the payload type of the Service service Method method.
+// Payload is the payload type of the service service method method.
 type Payload struct {
 	AttributeBoolean         *bool
 	AttributeInt             *int
@@ -64,7 +64,7 @@ type Payload struct {
 	Ignored                  *string
 }
 
-// Result is the result type of the Service service Method method.
+// Result is the result type of the service service method method.
 type Result struct {
 	AttributeBoolean         *bool
 	AttributeInt             *int

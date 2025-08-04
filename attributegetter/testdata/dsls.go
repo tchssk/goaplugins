@@ -5,111 +5,111 @@ import (
 )
 
 var SingleServiceDSL = func() {
-	var grandChild = Type("GrandChild", func() {
-		Attribute("AttributeBoolean", Boolean)
+	var grandChild = Type("grand-child", func() {
+		Attribute("attribute-boolean", Boolean)
 	})
-	var child = Type("Child", func() {
-		Attribute("AttributeBoolean", Boolean)
-		Attribute("AttributeGrandChild", grandChild)
-		Attribute("RequiredAttributeGrandChild", grandChild)
+	var child = Type("child", func() {
+		Attribute("attribute-boolean", Boolean)
+		Attribute("attribute-grand-child", grandChild)
+		Attribute("required-attribute-grand-child", grandChild)
 		Required(
-			"RequiredAttributeGrandChild",
+			"required-attribute-grand-child",
 		)
 	})
-	var payload = Type("Payload", func() {
-		Attribute("AttributeBoolean", Boolean)
-		Attribute("AttributeInt", Int)
-		Attribute("AttributeInt32", Int32)
-		Attribute("AttributeInt64", Int64)
-		Attribute("AttributeUInt", UInt)
-		Attribute("AttributeUInt32", UInt32)
-		Attribute("AttributeUInt64", UInt64)
-		Attribute("AttributeFloat32", Float32)
-		Attribute("AttributeFloat64", Float64)
-		Attribute("AttributeString", String)
-		Attribute("AttributeBytes", Bytes)
-		Attribute("AttributeAny", Any)
-		Attribute("AttributeChild", child)
-		Attribute("RequiredAttributeBoolean", Boolean)
-		Attribute("RequiredAttributeInt", Int)
-		Attribute("RequiredAttributeInt32", Int32)
-		Attribute("RequiredAttributeInt64", Int64)
-		Attribute("RequiredAttributeUInt", UInt)
-		Attribute("RequiredAttributeUInt32", UInt32)
-		Attribute("RequiredAttributeUInt64", UInt64)
-		Attribute("RequiredAttributeFloat32", Float32)
-		Attribute("RequiredAttributeFloat64", Float64)
-		Attribute("RequiredAttributeString", String)
-		Attribute("RequiredAttributeBytes", Bytes)
-		Attribute("RequiredAttributeAny", Any)
-		Attribute("RequiredAttributeChild", child)
-		Attribute("Ignored", String, func() {
+	var payload = Type("payload", func() {
+		Attribute("attribute-boolean", Boolean)
+		Attribute("attribute-int", Int)
+		Attribute("attribute-int32", Int32)
+		Attribute("attribute-int64", Int64)
+		Attribute("attribute-uInt", UInt)
+		Attribute("attribute-uInt32", UInt32)
+		Attribute("attribute-uInt64", UInt64)
+		Attribute("attribute-float32", Float32)
+		Attribute("attribute-float64", Float64)
+		Attribute("attribute-string", String)
+		Attribute("attribute-bytes", Bytes)
+		Attribute("attribute-any", Any)
+		Attribute("attribute-child", child)
+		Attribute("required-attribute-boolean", Boolean)
+		Attribute("required-attribute-int", Int)
+		Attribute("required-attribute-int32", Int32)
+		Attribute("required-attribute-int64", Int64)
+		Attribute("required-attribute-uInt", UInt)
+		Attribute("required-attribute-uInt32", UInt32)
+		Attribute("required-attribute-uInt64", UInt64)
+		Attribute("required-attribute-float32", Float32)
+		Attribute("required-attribute-float64", Float64)
+		Attribute("required-attribute-string", String)
+		Attribute("required-attribute-bytes", Bytes)
+		Attribute("required-attribute-any", Any)
+		Attribute("required-attribute-child", child)
+		Attribute("ignored", String, func() {
 			Meta("attributegetter:generate", "false")
 		})
 		Required(
-			"RequiredAttributeBoolean",
-			"RequiredAttributeInt",
-			"RequiredAttributeInt32",
-			"RequiredAttributeInt64",
-			"RequiredAttributeUInt",
-			"RequiredAttributeUInt32",
-			"RequiredAttributeUInt64",
-			"RequiredAttributeFloat32",
-			"RequiredAttributeFloat64",
-			"RequiredAttributeString",
-			"RequiredAttributeBytes",
-			"RequiredAttributeAny",
-			"RequiredAttributeChild",
+			"required-attribute-boolean",
+			"required-attribute-int",
+			"required-attribute-int32",
+			"required-attribute-int64",
+			"required-attribute-uInt",
+			"required-attribute-uInt32",
+			"required-attribute-uInt64",
+			"required-attribute-float32",
+			"required-attribute-float64",
+			"required-attribute-string",
+			"required-attribute-bytes",
+			"required-attribute-any",
+			"required-attribute-child",
 		)
 	})
 	var result = ResultType("application/vnd.result", func() {
-		Attribute("AttributeBoolean", Boolean)
-		Attribute("AttributeInt", Int)
-		Attribute("AttributeInt32", Int32)
-		Attribute("AttributeInt64", Int64)
-		Attribute("AttributeUInt", UInt)
-		Attribute("AttributeUInt32", UInt32)
-		Attribute("AttributeUInt64", UInt64)
-		Attribute("AttributeFloat32", Float32)
-		Attribute("AttributeFloat64", Float64)
-		Attribute("AttributeString", String)
-		Attribute("AttributeBytes", Bytes)
-		Attribute("AttributeAny", Any)
-		Attribute("AttributeChild", child)
-		Attribute("RequiredAttributeBoolean", Boolean)
-		Attribute("RequiredAttributeInt", Int)
-		Attribute("RequiredAttributeInt32", Int32)
-		Attribute("RequiredAttributeInt64", Int64)
-		Attribute("RequiredAttributeUInt", UInt)
-		Attribute("RequiredAttributeUInt32", UInt32)
-		Attribute("RequiredAttributeUInt64", UInt64)
-		Attribute("RequiredAttributeFloat32", Float32)
-		Attribute("RequiredAttributeFloat64", Float64)
-		Attribute("RequiredAttributeString", String)
-		Attribute("RequiredAttributeBytes", Bytes)
-		Attribute("RequiredAttributeAny", Any)
-		Attribute("RequiredAttributeChild", child)
-		Attribute("Ignored", String, func() {
+		Attribute("attribute-boolean", Boolean)
+		Attribute("attribute-int", Int)
+		Attribute("attribute-int32", Int32)
+		Attribute("attribute-int64", Int64)
+		Attribute("attribute-uInt", UInt)
+		Attribute("attribute-uInt32", UInt32)
+		Attribute("attribute-uInt64", UInt64)
+		Attribute("attribute-float32", Float32)
+		Attribute("attribute-float64", Float64)
+		Attribute("attribute-string", String)
+		Attribute("attribute-bytes", Bytes)
+		Attribute("attribute-any", Any)
+		Attribute("attribute-child", child)
+		Attribute("required-attribute-boolean", Boolean)
+		Attribute("required-attribute-int", Int)
+		Attribute("required-attribute-int32", Int32)
+		Attribute("required-attribute-int64", Int64)
+		Attribute("required-attribute-uInt", UInt)
+		Attribute("required-attribute-uInt32", UInt32)
+		Attribute("required-attribute-uInt64", UInt64)
+		Attribute("required-attribute-float32", Float32)
+		Attribute("required-attribute-float64", Float64)
+		Attribute("required-attribute-string", String)
+		Attribute("required-attribute-bytes", Bytes)
+		Attribute("required-attribute-any", Any)
+		Attribute("required-attribute-child", child)
+		Attribute("ignored", String, func() {
 			Meta("attributegetter:generate", "false")
 		})
 		Required(
-			"RequiredAttributeBoolean",
-			"RequiredAttributeInt",
-			"RequiredAttributeInt32",
-			"RequiredAttributeInt64",
-			"RequiredAttributeUInt",
-			"RequiredAttributeUInt32",
-			"RequiredAttributeUInt64",
-			"RequiredAttributeFloat32",
-			"RequiredAttributeFloat64",
-			"RequiredAttributeString",
-			"RequiredAttributeBytes",
-			"RequiredAttributeAny",
-			"RequiredAttributeChild",
+			"required-attribute-boolean",
+			"required-attribute-int",
+			"required-attribute-int32",
+			"required-attribute-int64",
+			"required-attribute-uInt",
+			"required-attribute-uInt32",
+			"required-attribute-uInt64",
+			"required-attribute-float32",
+			"required-attribute-float64",
+			"required-attribute-string",
+			"required-attribute-bytes",
+			"required-attribute-any",
+			"required-attribute-child",
 		)
 	})
-	Service("Service", func() {
-		Method("Method", func() {
+	Service("service", func() {
+		Method("method", func() {
 			Payload(payload)
 			Result(result)
 			HTTP(func() {
