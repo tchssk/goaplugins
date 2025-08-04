@@ -20,6 +20,7 @@ func TestService(t *testing.T) {
 		Code string
 	}{
 		{"single service", testdata.SingleServiceDSL, testdata.SimpleCode},
+		{"service with collection", testdata.ServiceWithCollectionDSL, testdata.ServiceWithCollectionCode},
 	}
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {

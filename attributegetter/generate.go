@@ -81,6 +81,9 @@ func serviceAttributeGetter(f *codegen.File, root *expr.RootExpr) {
 }
 
 func appendSections(sectionName string, f *codegen.File, att *expr.AttributeExpr, baseType string) {
+	if !expr.IsObject(att.Type) {
+		return
+	}
 	if err := codegen.WalkMappedAttr(expr.NewMappedAttributeExpr(att), func(name, elem string, required bool, a *expr.AttributeExpr) error {
 		if !mustGenerate(a.Meta) {
 			return nil
