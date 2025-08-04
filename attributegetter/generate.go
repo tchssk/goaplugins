@@ -108,7 +108,7 @@ func mustGenerate(meta expr.MetaExpr) bool {
 func buildMethodData(parent *expr.AttributeExpr, name string, att *expr.AttributeExpr, baseType string) *MethodData {
 	scope := codegen.NewNameScope()
 	typ := scope.GoTypeName(att)
-	if parent.IsPrimitivePointer(name, true) || !expr.IsPrimitive(att.Type) {
+	if parent.IsPrimitivePointer(name, true) || expr.IsObject(att.Type) {
 		typ = "*" + typ
 	}
 	return &MethodData{
