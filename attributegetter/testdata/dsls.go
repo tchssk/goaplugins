@@ -108,8 +108,8 @@ var SingleServiceDSL = func() {
 			"required-attribute-child",
 		)
 	})
-	Service("Service", func() {
-		Method("Method", func() {
+	Service("service", func() {
+		Method("method", func() {
 			Payload(payload)
 			Result(result)
 			HTTP(func() {
