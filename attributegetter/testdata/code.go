@@ -47,6 +47,7 @@ type Payload struct {
 	AttributeString          *string
 	AttributeBytes           []byte
 	AttributeAny             any
+	AttributeArray           []string
 	AttributeChild           *Child
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
@@ -60,6 +61,7 @@ type Payload struct {
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     any
+	RequiredAttributeArray   []string
 	RequiredAttributeChild   *Child
 	Ignored                  *string
 }
@@ -78,6 +80,7 @@ type Result struct {
 	AttributeString          *string
 	AttributeBytes           []byte
 	AttributeAny             any
+	AttributeArray           []string
 	AttributeChild           *Child
 	RequiredAttributeBoolean bool
 	RequiredAttributeInt     int
@@ -91,6 +94,7 @@ type Result struct {
 	RequiredAttributeString  string
 	RequiredAttributeBytes   []byte
 	RequiredAttributeAny     any
+	RequiredAttributeArray   []string
 	RequiredAttributeChild   *Child
 	Ignored                  *string
 }
@@ -156,8 +160,20 @@ func newResult(vres *serviceviews.ResultView) *Result {
 	if vres.RequiredAttributeString != nil {
 		res.RequiredAttributeString = *vres.RequiredAttributeString
 	}
+	if vres.AttributeArray != nil {
+		res.AttributeArray = make([]string, len(vres.AttributeArray))
+		for i, val := range vres.AttributeArray {
+			res.AttributeArray[i] = val
+		}
+	}
 	if vres.AttributeChild != nil {
 		res.AttributeChild = transformServiceviewsChildViewToChild(vres.AttributeChild)
+	}
+	if vres.RequiredAttributeArray != nil {
+		res.RequiredAttributeArray = make([]string, len(vres.RequiredAttributeArray))
+		for i, val := range vres.RequiredAttributeArray {
+			res.RequiredAttributeArray[i] = val
+		}
 	}
 	if vres.RequiredAttributeChild != nil {
 		res.RequiredAttributeChild = transformServiceviewsChildViewToChild(vres.RequiredAttributeChild)
@@ -195,8 +211,22 @@ func newResultView(res *Result) *serviceviews.ResultView {
 		RequiredAttributeAny:     res.RequiredAttributeAny,
 		Ignored:                  res.Ignored,
 	}
+	if res.AttributeArray != nil {
+		vres.AttributeArray = make([]string, len(res.AttributeArray))
+		for i, val := range res.AttributeArray {
+			vres.AttributeArray[i] = val
+		}
+	}
 	if res.AttributeChild != nil {
 		vres.AttributeChild = transformChildToServiceviewsChildView(res.AttributeChild)
+	}
+	if res.RequiredAttributeArray != nil {
+		vres.RequiredAttributeArray = make([]string, len(res.RequiredAttributeArray))
+		for i, val := range res.RequiredAttributeArray {
+			vres.RequiredAttributeArray[i] = val
+		}
+	} else {
+		vres.RequiredAttributeArray = []string{}
 	}
 	if res.RequiredAttributeChild != nil {
 		vres.RequiredAttributeChild = transformChildToServiceviewsChildView(res.RequiredAttributeChild)
@@ -316,6 +346,10 @@ func (p *Payload) GetAttributeAny() any {
 	return p.AttributeAny
 }
 
+func (p *Payload) GetAttributeArray() []string {
+	return p.AttributeArray
+}
+
 func (p *Payload) GetAttributeChild() *Child {
 	return p.AttributeChild
 }
@@ -366,6 +400,10 @@ func (p *Payload) GetRequiredAttributeBytes() []byte {
 
 func (p *Payload) GetRequiredAttributeAny() any {
 	return p.RequiredAttributeAny
+}
+
+func (p *Payload) GetRequiredAttributeArray() []string {
+	return p.RequiredAttributeArray
 }
 
 func (p *Payload) GetRequiredAttributeChild() *Child {
@@ -420,6 +458,10 @@ func (p *Result) GetAttributeAny() any {
 	return p.AttributeAny
 }
 
+func (p *Result) GetAttributeArray() []string {
+	return p.AttributeArray
+}
+
 func (p *Result) GetAttributeChild() *Child {
 	return p.AttributeChild
 }
@@ -470,6 +512,10 @@ func (p *Result) GetRequiredAttributeBytes() []byte {
 
 func (p *Result) GetRequiredAttributeAny() any {
 	return p.RequiredAttributeAny
+}
+
+func (p *Result) GetRequiredAttributeArray() []string {
+	return p.RequiredAttributeArray
 }
 
 func (p *Result) GetRequiredAttributeChild() *Child {

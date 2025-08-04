@@ -29,6 +29,7 @@ var SingleServiceDSL = func() {
 		Attribute("attribute-string", String)
 		Attribute("attribute-bytes", Bytes)
 		Attribute("attribute-any", Any)
+		Attribute("attribute-array", ArrayOf(String))
 		Attribute("attribute-child", child)
 		Attribute("required-attribute-boolean", Boolean)
 		Attribute("required-attribute-int", Int)
@@ -42,6 +43,7 @@ var SingleServiceDSL = func() {
 		Attribute("required-attribute-string", String)
 		Attribute("required-attribute-bytes", Bytes)
 		Attribute("required-attribute-any", Any)
+		Attribute("required-attribute-array", ArrayOf(String))
 		Attribute("required-attribute-child", child)
 		Attribute("ignored", String, func() {
 			Meta("attributegetter:generate", "false")
@@ -59,6 +61,7 @@ var SingleServiceDSL = func() {
 			"required-attribute-string",
 			"required-attribute-bytes",
 			"required-attribute-any",
+			"required-attribute-array",
 			"required-attribute-child",
 		)
 	})
@@ -75,6 +78,7 @@ var SingleServiceDSL = func() {
 		Attribute("attribute-string", String)
 		Attribute("attribute-bytes", Bytes)
 		Attribute("attribute-any", Any)
+		Attribute("attribute-array", ArrayOf(String))
 		Attribute("attribute-child", child)
 		Attribute("required-attribute-boolean", Boolean)
 		Attribute("required-attribute-int", Int)
@@ -88,6 +92,7 @@ var SingleServiceDSL = func() {
 		Attribute("required-attribute-string", String)
 		Attribute("required-attribute-bytes", Bytes)
 		Attribute("required-attribute-any", Any)
+		Attribute("required-attribute-array", ArrayOf(String))
 		Attribute("required-attribute-child", child)
 		Attribute("ignored", String, func() {
 			Meta("attributegetter:generate", "false")
@@ -105,6 +110,7 @@ var SingleServiceDSL = func() {
 			"required-attribute-string",
 			"required-attribute-bytes",
 			"required-attribute-any",
+			"required-attribute-array",
 			"required-attribute-child",
 		)
 	})
