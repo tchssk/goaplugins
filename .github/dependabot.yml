@@ -4,13 +4,9 @@ updates:
     directory: /
     schedule:
       interval: daily
-    reviewers:
-      - tchssk
   - package-ecosystem: gomod
     directory: /
     schedule:
       interval: daily
     ignore:
       - dependency-name: goa.design/goa/v3
-    reviewers:
-      - tchssk
