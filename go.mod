@@ -6,7 +6,7 @@ toolchain go1.24.5
 
 require (
 	github.com/stretchr/testify v1.11.1
-	goa.design/goa/v3 v3.21.4
+	goa.design/goa/v3 v3.21.5
 )
 
 require (
