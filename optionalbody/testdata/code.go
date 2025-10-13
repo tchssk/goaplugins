@@ -85,8 +85,8 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod1Request returns a decoder for requests sent to the Service1
 // Method1 endpoint.
-func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
-	return func(r *http.Request) (any, error) {
+func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service1.Payload, error) {
+	return func(r *http.Request) (*service1.Payload, error) {
 		var (
 			body      Method1RequestBody
 			emptyBody bool
@@ -130,8 +130,8 @@ func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod2Request returns a decoder for requests sent to the Service1
 // Method2 endpoint.
-func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
-	return func(r *http.Request) (any, error) {
+func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service1.Payload, error) {
+	return func(r *http.Request) (*service1.Payload, error) {
 		var (
 			body Method2RequestBody
 			err  error
@@ -170,8 +170,8 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod1Request returns a decoder for requests sent to the Service2
 // Method1 endpoint.
-func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
-	return func(r *http.Request) (any, error) {
+func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service2.Payload, error) {
+	return func(r *http.Request) (*service2.Payload, error) {
 		var (
 			body Method1RequestBody
 			err  error
@@ -198,8 +198,7 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 }
 `
 
-var TypesWithOptionalBodyCode = `
-// Method1RequestBody is the type of the "Service1" service "Method1" endpoint
+var TypesWithOptionalBodyCode = `// Method1RequestBody is the type of the "Service1" service "Method1" endpoint
 // HTTP request body.
 type Method1RequestBody struct {
 	Attribute *string ` + "`" + `form:"Attribute,omitempty" json:"Attribute,omitempty" xml:"Attribute,omitempty"` + "`" + `
@@ -255,8 +254,7 @@ func NewMethod1PayloadWithOptionalBody(body *Method1RequestBody) *service1.Paylo
 }
 `
 
-var TypesWithoutOptionalBodyCode = `
-// Method1RequestBody is the type of the "Service2" service "Method1" endpoint
+var TypesWithoutOptionalBodyCode = `// Method1RequestBody is the type of the "Service2" service "Method1" endpoint
 // HTTP request body.
 type Method1RequestBody struct {
 	Attribute *string ` + "`" + `form:"Attribute,omitempty" json:"Attribute,omitempty" xml:"Attribute,omitempty"` + "`" + `
