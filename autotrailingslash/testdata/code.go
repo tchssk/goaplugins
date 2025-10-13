@@ -1,7 +1,6 @@
 package testdata
 
-var SimpleCode = `
-// Server lists the Service service endpoint HTTP handlers.
+var SimpleCode = `// Server lists the Service service endpoint HTTP handlers.
 type Server struct {
 	Mounts  []*MountPoint
 	Method1 http.Handler
@@ -249,8 +248,8 @@ func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod2Request returns a decoder for requests sent to the Service
 // Method2 endpoint.
-func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
-	return func(r *http.Request) (any, error) {
+func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service.Method2Payload, error) {
+	return func(r *http.Request) (*service.Method2Payload, error) {
 		var (
 			param1 string
 
@@ -274,8 +273,8 @@ func EncodeMethod3Response(encoder func(context.Context, http.ResponseWriter) go
 
 // DecodeMethod3Request returns a decoder for requests sent to the Service
 // Method3 endpoint.
-func DecodeMethod3Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
-	return func(r *http.Request) (any, error) {
+func DecodeMethod3Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service.Method3Payload, error) {
+	return func(r *http.Request) (*service.Method3Payload, error) {
 		var (
 			param2 string
 
