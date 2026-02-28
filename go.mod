@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/stretchr/testify v1.11.1
-	goa.design/goa/v3 v3.22.3
+	goa.design/goa/v3 v3.22.5
 )
 
 require (
