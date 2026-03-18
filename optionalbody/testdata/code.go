@@ -87,6 +87,7 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 // Method1 endpoint.
 func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service1.Payload, error) {
 	return func(r *http.Request) (*service1.Payload, error) {
+		var payload *service1.Payload
 		var (
 			body      Method1RequestBody
 			emptyBody bool
@@ -97,9 +98,9 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			if !errors.Is(err, io.EOF) {
 				var gerr *goa.ServiceError
 				if errors.As(err, &gerr) {
-					return nil, gerr
+					return payload, gerr
 				}
-				return nil, goa.DecodePayloadError(err.Error())
+				return payload, goa.DecodePayloadError(err.Error())
 			}
 			emptyBody = true
 			err = nil
@@ -107,10 +108,10 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		if !emptyBody {
 			err = ValidateMethod1RequestBody(&body)
 			if err != nil {
-				return nil, err
+				return payload, err
 			}
 		}
-		payload := NewMethod1PayloadWithOptionalBody(&body)
+		payload = NewMethod1PayloadWithOptionalBody(&body)
 		if !emptyBody {
 			payload = NewMethod1Payload(&body)
 		}
@@ -132,6 +133,7 @@ func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) go
 // Method2 endpoint.
 func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service1.Payload, error) {
 	return func(r *http.Request) (*service1.Payload, error) {
+		var payload *service1.Payload
 		var (
 			body Method2RequestBody
 			err  error
@@ -139,19 +141,19 @@ func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		err = decoder(r).Decode(&body)
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				return nil, goa.MissingPayloadError()
+				return payload, goa.MissingPayloadError()
 			}
 			var gerr *goa.ServiceError
 			if errors.As(err, &gerr) {
-				return nil, gerr
+				return payload, gerr
 			}
-			return nil, goa.DecodePayloadError(err.Error())
+			return payload, goa.DecodePayloadError(err.Error())
 		}
 		err = ValidateMethod2RequestBody(&body)
 		if err != nil {
-			return nil, err
+			return payload, err
 		}
-		payload := NewMethod2Payload(&body)
+		payload = NewMethod2Payload(&body)
 
 		return payload, nil
 	}
@@ -172,6 +174,7 @@ func EncodeMethod1Response(encoder func(context.Context, http.ResponseWriter) go
 // Method1 endpoint.
 func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service2.Payload, error) {
 	return func(r *http.Request) (*service2.Payload, error) {
+		var payload *service2.Payload
 		var (
 			body Method1RequestBody
 			err  error
@@ -179,19 +182,19 @@ func DecodeMethod1Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		err = decoder(r).Decode(&body)
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				return nil, goa.MissingPayloadError()
+				return payload, goa.MissingPayloadError()
 			}
 			var gerr *goa.ServiceError
 			if errors.As(err, &gerr) {
-				return nil, gerr
+				return payload, gerr
 			}
-			return nil, goa.DecodePayloadError(err.Error())
+			return payload, goa.DecodePayloadError(err.Error())
 		}
 		err = ValidateMethod1RequestBody(&body)
 		if err != nil {
-			return nil, err
+			return payload, err
 		}
-		payload := NewMethod1Payload(&body)
+		payload = NewMethod1Payload(&body)
 
 		return payload, nil
 	}

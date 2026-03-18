@@ -104,7 +104,7 @@ func update(f *codegen.File) {
 			section.Source = strings.Replace(section.Source,
 				`	{{- if .Payload.Request.MustHaveBody }}
 			if errors.Is(err, io.EOF) {
-				return nil, goa.MissingPayloadError()
+				return payload, goa.MissingPayloadError()
 			}
 	{{- else }}
 			if errors.Is(err, io.EOF) {
@@ -113,18 +113,18 @@ func update(f *codegen.File) {
 	{{- end }}
 			var gerr *goa.ServiceError
 			if errors.As(err, &gerr) {
-				return nil, gerr
+				return payload, gerr
 			}
-			return nil, goa.DecodePayloadError(err.Error())
+			return payload, goa.DecodePayloadError(err.Error())
 	{{- if not .Payload.Request.MustHaveBody }}
 			}
 	{{- end }}`,
 				`			if !errors.Is(err, io.EOF) {
 				var gerr *goa.ServiceError
 				if errors.As(err, &gerr) {
-					return nil, gerr
+					return payload, gerr
 				}
-				return nil, goa.DecodePayloadError(err.Error())
+				return payload, goa.DecodePayloadError(err.Error())
 			}
 			emptyBody = true
 			err = nil`,
@@ -134,22 +134,22 @@ func update(f *codegen.File) {
 				`	{{- if .Payload.Request.ServerBody.ValidateRef }}
 		{{ .Payload.Request.ServerBody.ValidateRef }}
 		if err != nil {
-			return nil, err
+			return payload, err
 		}
 	{{- end }}`,
 				`	{{- if .Payload.Request.ServerBody.ValidateRef }}
 		if !emptyBody {
 			{{ .Payload.Request.ServerBody.ValidateRef }}
 			if err != nil {
-				return nil, err
+				return payload, err
 			}
 		}
 	{{- end }}`,
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
-				`	payload := {{ .Payload.Request.PayloadInit.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})`,
-				`	payload := {{ .Payload.Request.PayloadInit.Name }}`+serverPayloadInitNameSuffix+`({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
+				`	payload = {{ .Payload.Request.PayloadInit.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})`,
+				`	payload = {{ .Payload.Request.PayloadInit.Name }}`+serverPayloadInitNameSuffix+`({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
 	if !emptyBody {
 		payload = {{ .Payload.Request.PayloadInit.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
 	}`,
