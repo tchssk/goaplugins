@@ -250,13 +250,14 @@ func EncodeMethod2Response(encoder func(context.Context, http.ResponseWriter) go
 // Method2 endpoint.
 func DecodeMethod2Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service.Method2Payload, error) {
 	return func(r *http.Request) (*service.Method2Payload, error) {
+		var payload *service.Method2Payload
 		var (
 			param1 string
 
 			params = mux.Vars(r)
 		)
 		param1 = params["param1"]
-		payload := NewMethod2Payload(param1)
+		payload = NewMethod2Payload(param1)
 
 		return payload, nil
 	}
@@ -275,13 +276,14 @@ func EncodeMethod3Response(encoder func(context.Context, http.ResponseWriter) go
 // Method3 endpoint.
 func DecodeMethod3Request(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*service.Method3Payload, error) {
 	return func(r *http.Request) (*service.Method3Payload, error) {
+		var payload *service.Method3Payload
 		var (
 			param2 string
 
 			params = mux.Vars(r)
 		)
 		param2 = params["param2"]
-		payload := NewMethod3Payload(param2)
+		payload = NewMethod3Payload(param2)
 
 		return payload, nil
 	}
