@@ -2,10 +2,23 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    groups:
+      actions:
+        patterns:
+          - '*'
     schedule:
       interval: daily
   - package-ecosystem: gomod
     directory: /
+    groups:
+      gomod:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'goa.design/*'
+        update-types:
+          - minor
+          - patch
     schedule:
       interval: daily
     ignore:
