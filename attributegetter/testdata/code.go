@@ -273,9 +273,6 @@ func newResultView(res *Result) *serviceviews.ResultView {
 // transformServiceviewsChildViewToChild builds a value of type *Child from a
 // value of type *serviceviews.ChildView.
 func transformServiceviewsChildViewToChild(v *serviceviews.ChildView) *Child {
-	if v == nil {
-		return nil
-	}
 	res := &Child{
 		AttributeBoolean: v.AttributeBoolean,
 	}
@@ -292,9 +289,6 @@ func transformServiceviewsChildViewToChild(v *serviceviews.ChildView) *Child {
 // transformServiceviewsGrandChildViewToGrandChild builds a value of type
 // *GrandChild from a value of type *serviceviews.GrandChildView.
 func transformServiceviewsGrandChildViewToGrandChild(v *serviceviews.GrandChildView) *GrandChild {
-	if v == nil {
-		return nil
-	}
 	res := &GrandChild{
 		AttributeBoolean: v.AttributeBoolean,
 	}
@@ -305,9 +299,6 @@ func transformServiceviewsGrandChildViewToGrandChild(v *serviceviews.GrandChildV
 // transformChildToServiceviewsChildView builds a value of type
 // *serviceviews.ChildView from a value of type *Child.
 func transformChildToServiceviewsChildView(v *Child) *serviceviews.ChildView {
-	if v == nil {
-		return nil
-	}
 	res := &serviceviews.ChildView{
 		AttributeBoolean: v.AttributeBoolean,
 	}
@@ -324,9 +315,6 @@ func transformChildToServiceviewsChildView(v *Child) *serviceviews.ChildView {
 // transformGrandChildToServiceviewsGrandChildView builds a value of type
 // *serviceviews.GrandChildView from a value of type *GrandChild.
 func transformGrandChildToServiceviewsGrandChildView(v *GrandChild) *serviceviews.GrandChildView {
-	if v == nil {
-		return nil
-	}
 	res := &serviceviews.GrandChildView{
 		AttributeBoolean: v.AttributeBoolean,
 	}

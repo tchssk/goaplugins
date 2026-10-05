@@ -6,8 +6,11 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash/testdata"
+	"goa.design/goa/v3/codegen"
+	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
 	"goa.design/goa/v3/expr"
 	httpcodegen "goa.design/goa/v3/http/codegen"
@@ -24,26 +27,26 @@ func TestService(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			root := expr.RunDSL(t, c.DSL)
-			if err := autotrailingslash.Prepare("", []eval.Root{root}); err != nil {
-				t.Fatal(err)
-			}
-			services := httpcodegen.CreateHTTPServices(root)
-			fs := httpcodegen.ServerFiles("", services)
-			if fs == nil {
-				t.Fatalf("got nil file, expected not nil")
-			}
+			require.NoError(t, autotrailingslash.Prepare("", []eval.Root{root}))
+			generation, err := codegen.NewGeneration("goa.design/goa/example", []eval.Root{root})
+			require.NoError(t, err)
+			servicePlan, err := service.NewPlan(root, generation, expr.NewExampleGenerator(root.API.RandomizerFactory))
+			require.NoError(t, err)
+			plans, err := httpcodegen.NewPlans(generation, httpcodegen.PlanInput{Root: root, Service: servicePlan})
+			require.NoError(t, err)
+			require.NoError(t, generation.Freeze())
+			require.NoError(t, servicePlan.Link())
+			require.NoError(t, plans[0].Link())
+			fs := plans[0].ServerFiles()
+			require.NotNil(t, fs)
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
 				for _, s := range f.SectionTemplates[1:] {
-					if err := s.Write(buf); err != nil {
-						t.Fatal(err)
-					}
+					require.NoError(t, s.Write(buf))
 				}
 			}
 			bs, err := format.Source(buf.Bytes())
-			if err != nil {
-				t.Fatal(err)
-			}
+			require.NoError(t, err)
 			code := string(bs)
 			assert.Equal(t, c.Code, code)
 		})

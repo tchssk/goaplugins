@@ -3,14 +3,17 @@ package goaversionremover_test
 import (
 	"bytes"
 	"go/format"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tchssk/goaplugins/v3/goaversionremover"
 	"github.com/tchssk/goaplugins/v3/goaversionremover/testdata"
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
+	"goa.design/goa/v3/expr"
 )
 
 func TestService(t *testing.T) {
@@ -24,29 +27,29 @@ func TestService(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			root := codegen.RunDSL(t, c.DSL)
-			if len(root.Services) != 1 {
-				t.Fatalf("got %d services, expected 1", len(root.Services))
-			}
-			services := service.NewServicesData(root)
-			fs := service.Files("", root.Services[0], services, make(map[string][]string))
-			if fs == nil {
-				t.Fatalf("got nil file, expected not nil")
-			}
-			if _, err := goaversionremover.Generate("", []eval.Root{root}, fs); err != nil {
-				t.Fatal(err)
-			}
+			require.Len(t, root.Services, 1)
+			generation, err := codegen.NewGeneration("goa.design/goa/example", []eval.Root{root})
+			require.NoError(t, err)
+			plan, err := service.NewPlan(root, generation, expr.NewExampleGenerator(root.API.RandomizerFactory))
+			require.NoError(t, err)
+			require.NoError(t, generation.Freeze())
+			require.NoError(t, plan.Link())
+			fs, err := service.Files(plan)
+			require.NoError(t, err)
+			require.NotNil(t, fs)
+			_, err = goaversionremover.Generate("", []eval.Root{root}, fs)
+			require.NoError(t, err)
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
+				if filepath.Base(f.Path) != "service.go" {
+					continue
+				}
 				for _, s := range f.SectionTemplates {
-					if err := s.Write(buf); err != nil {
-						t.Fatal(err)
-					}
+					require.NoError(t, s.Write(buf))
 				}
 			}
 			bs, err := format.Source(buf.Bytes())
-			if err != nil {
-				t.Fatal(err)
-			}
+			require.NoError(t, err)
 			code := string(bs)
 			assert.Equal(t, c.Code, code)
 		})
