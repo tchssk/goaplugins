@@ -3,6 +3,7 @@ package goaversionremover_test
 import (
 	"bytes"
 	"go/format"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,6 +13,7 @@ import (
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
+	"goa.design/goa/v3/expr"
 )
 
 func TestService(t *testing.T) {
@@ -26,13 +28,22 @@ func TestService(t *testing.T) {
 		t.Run(c.Name, func(t *testing.T) {
 			root := codegen.RunDSL(t, c.DSL)
 			require.Len(t, root.Services, 1)
-			services := service.NewServicesData(root)
-			fs := service.Files("", root.Services[0], services, make(map[string][]string))
+			generation, err := codegen.NewGeneration("goa.design/goa/example", []eval.Root{root})
+			require.NoError(t, err)
+			plan, err := service.NewPlan(root, generation, expr.NewExampleGenerator(root.API.RandomizerFactory))
+			require.NoError(t, err)
+			require.NoError(t, generation.Freeze())
+			require.NoError(t, plan.Link())
+			fs, err := service.Files(plan)
+			require.NoError(t, err)
 			require.NotNil(t, fs)
-			_, err := goaversionremover.Generate("", []eval.Root{root}, fs)
+			_, err = goaversionremover.Generate("", []eval.Root{root}, fs)
 			require.NoError(t, err)
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
+				if filepath.Base(f.Path) != "service.go" {
+					continue
+				}
 				for _, s := range f.SectionTemplates {
 					require.NoError(t, s.Write(buf))
 				}

@@ -9,6 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash"
 	"github.com/tchssk/goaplugins/v3/autotrailingslash/testdata"
+	"goa.design/goa/v3/codegen"
+	"goa.design/goa/v3/codegen/service"
 	"goa.design/goa/v3/eval"
 	"goa.design/goa/v3/expr"
 	httpcodegen "goa.design/goa/v3/http/codegen"
@@ -26,8 +28,16 @@ func TestService(t *testing.T) {
 		t.Run(c.Name, func(t *testing.T) {
 			root := expr.RunDSL(t, c.DSL)
 			require.NoError(t, autotrailingslash.Prepare("", []eval.Root{root}))
-			services := httpcodegen.CreateHTTPServices(root)
-			fs := httpcodegen.ServerFiles("", services)
+			generation, err := codegen.NewGeneration("goa.design/goa/example", []eval.Root{root})
+			require.NoError(t, err)
+			servicePlan, err := service.NewPlan(root, generation, expr.NewExampleGenerator(root.API.RandomizerFactory))
+			require.NoError(t, err)
+			plans, err := httpcodegen.NewPlans(generation, httpcodegen.PlanInput{Root: root, Service: servicePlan})
+			require.NoError(t, err)
+			require.NoError(t, generation.Freeze())
+			require.NoError(t, servicePlan.Link())
+			require.NoError(t, plans[0].Link())
+			fs := plans[0].ServerFiles()
 			require.NotNil(t, fs)
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
