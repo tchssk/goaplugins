@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tchssk/goaplugins/v3/optionalbody"
 	"github.com/tchssk/goaplugins/v3/optionalbody/testdata"
 	"goa.design/goa/v3/codegen"
@@ -27,29 +28,20 @@ func TestService(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			root := codegen.RunDSL(t, c.DSL)
-			if len(root.Services) != 2 {
-				t.Fatalf("got %d services, expected 2", len(root.Services))
-			}
+			require.Len(t, root.Services, 2)
 			services := service.NewServicesData(root)
 			fs := service.Files("", root.Services[c.Service], services, make(map[string][]string))
-			if fs == nil {
-				t.Fatalf("got nil file, expected not nil")
-			}
-			if _, err := optionalbody.Update("", []eval.Root{root}, fs); err != nil {
-				t.Fatal(err)
-			}
+			require.NotNil(t, fs)
+			_, err := optionalbody.Update("", []eval.Root{root}, fs)
+			require.NoError(t, err)
 			buf := new(bytes.Buffer)
 			for _, f := range fs {
 				for _, s := range f.SectionTemplates[1:] {
-					if err := s.Write(buf); err != nil {
-						t.Fatal(err)
-					}
+					require.NoError(t, s.Write(buf))
 				}
 			}
 			bs, err := format.Source(buf.Bytes())
-			if err != nil {
-				t.Fatal(err)
-			}
+			require.NoError(t, err)
 			code := string(bs)
 			assert.Equal(t, c.Code, code)
 		})
@@ -71,22 +63,15 @@ func TestEncodeDecode(t *testing.T) {
 			root := codegen.RunDSL(t, c.DSL)
 			services := httpcodegen.CreateHTTPServices(root)
 			fs := httpcodegen.ServerFiles("", services)
-			if len(fs) != 4 {
-				t.Fatalf("got %d files, expected two", len(fs))
-			}
-			if _, err := optionalbody.Update("", []eval.Root{root}, fs); err != nil {
-				t.Fatal(err)
-			}
+			require.Len(t, fs, 4)
+			_, err := optionalbody.Update("", []eval.Root{root}, fs)
+			require.NoError(t, err)
 			buf := new(bytes.Buffer)
 			for _, s := range fs[c.File].SectionTemplates[1:] {
-				if err := s.Write(buf); err != nil {
-					t.Fatal(err)
-				}
+				require.NoError(t, s.Write(buf))
 			}
 			bs, err := format.Source(buf.Bytes())
-			if err != nil {
-				t.Fatal(err)
-			}
+			require.NoError(t, err)
 			code := string(bs)
 			assert.Equal(t, c.Code, code)
 		})
@@ -109,28 +94,19 @@ func TestTypes(t *testing.T) {
 			services := httpcodegen.CreateHTTPServices(root)
 			var files []*codegen.File
 			fs := httpcodegen.ServerFiles("", services)
-			if len(fs) != 4 {
-				t.Fatalf("got %d files, expected two", len(fs))
-			}
+			require.Len(t, fs, 4)
 			files = append(files, fs...)
 			fs = httpcodegen.ServerTypeFiles("", services)
-			if len(fs) != 2 {
-				t.Fatalf("got %d files, expected two", len(fs))
-			}
+			require.Len(t, fs, 2)
 			files = append(files, fs...)
-			if _, err := optionalbody.Update("", []eval.Root{root}, files); err != nil {
-				t.Fatal(err)
-			}
+			_, err := optionalbody.Update("", []eval.Root{root}, files)
+			require.NoError(t, err)
 			buf := new(bytes.Buffer)
 			for _, s := range fs[c.File].SectionTemplates[1:] {
-				if err := s.Write(buf); err != nil {
-					t.Fatal(err)
-				}
+				require.NoError(t, s.Write(buf))
 			}
 			bs, err := format.Source(buf.Bytes())
-			if err != nil {
-				t.Fatal(err)
-			}
+			require.NoError(t, err)
 			code := string(bs)
 			assert.Equal(t, c.Code, code)
 		})
