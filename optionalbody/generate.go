@@ -91,11 +91,11 @@ func update(f *codegen.File) {
 			}
 			section.Source = strings.Replace(section.Source,
 				`		var (
-			body {{ .Payload.Request.ServerBody.VarName }}
+			body {{ if .Payload.Request.OptionalBody }}{{ (index .Payload.Request.PayloadInit.ServerArgs 0).TypeRef }}{{ else if .Payload.Request.ServerBody.Declaration }}{{ .Payload.Request.ServerBody.Declaration.Name }}{{ else }}{{ .Payload.Request.ServerBody.VarName }}{{ end }}
 			err  error
 		)`,
 				`		var (
-			body {{ .Payload.Request.ServerBody.VarName }}
+			body {{ if .Payload.Request.OptionalBody }}{{ (index .Payload.Request.PayloadInit.ServerArgs 0).TypeRef }}{{ else if .Payload.Request.ServerBody.Declaration }}{{ .Payload.Request.ServerBody.Declaration.Name }}{{ else }}{{ .Payload.Request.ServerBody.VarName }}{{ end }}
 			emptyBody bool
 			err  error
 		)`,
@@ -131,13 +131,25 @@ func update(f *codegen.File) {
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
-				`	{{- if .Payload.Request.ServerBody.ValidateRef }}
+				`	{{- if and .Payload.Request.ServerBody.ValidatorDeclaration .Payload.Request.ServerBody.ValidationTarget }}
+		err = {{ .Payload.Request.ServerBody.ValidatorDeclaration.Name }}({{ if .Payload.Request.OptionalBody }}body{{ else }}{{ .Payload.Request.ServerBody.ValidationTarget }}{{ end }})
+		if err != nil {
+			return payload, err
+		}
+	{{- else if .Payload.Request.ServerBody.ValidateRef }}
 		{{ .Payload.Request.ServerBody.ValidateRef }}
 		if err != nil {
 			return payload, err
 		}
 	{{- end }}`,
-				`	{{- if .Payload.Request.ServerBody.ValidateRef }}
+				`	{{- if and .Payload.Request.ServerBody.ValidatorDeclaration .Payload.Request.ServerBody.ValidationTarget }}
+		if !emptyBody {
+			err = {{ .Payload.Request.ServerBody.ValidatorDeclaration.Name }}({{ if .Payload.Request.OptionalBody }}body{{ else }}{{ .Payload.Request.ServerBody.ValidationTarget }}{{ end }})
+			if err != nil {
+				return payload, err
+			}
+		}
+	{{- else if .Payload.Request.ServerBody.ValidateRef }}
 		if !emptyBody {
 			{{ .Payload.Request.ServerBody.ValidateRef }}
 			if err != nil {
@@ -148,10 +160,10 @@ func update(f *codegen.File) {
 				-1,
 			)
 			section.Source = strings.Replace(section.Source,
-				`	payload = {{ .Payload.Request.PayloadInit.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})`,
-				`	payload = {{ .Payload.Request.PayloadInit.Name }}`+serverPayloadInitNameSuffix+`({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
+				`	payload = {{ .Payload.Request.PayloadInit.Declaration.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})`,
+				`	payload = {{ .Payload.Request.PayloadInit.Declaration.Name }}`+serverPayloadInitNameSuffix+`({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
 	if !emptyBody {
-		payload = {{ .Payload.Request.PayloadInit.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
+		payload = {{ .Payload.Request.PayloadInit.Declaration.Name }}({{ range .Payload.Request.PayloadInit.ServerArgs }}{{ .Ref }}, {{ end }})
 	}`,
 				-1,
 			)
@@ -165,22 +177,16 @@ func update(f *codegen.File) {
 			if !strings.HasSuffix(data.Description, serverPayloadInitDescriptionSuffix) {
 				continue
 			}
+			init := *data
+			init.ServerCode = fixAssignments(data.ServerCode)
 			f.SectionTemplates = append(f.SectionTemplates, &codegen.SectionTemplate{
-				Name:   "server-payload-init",
-				Source: section.Source,
-				Data: &httpcodegen.InitData{
-					Name:                data.Name + serverPayloadInitNameSuffix,
-					Description:         data.Description,
-					ServerArgs:          data.ServerArgs,
-					ClientArgs:          data.ClientArgs,
-					CLIArgs:             data.CLIArgs,
-					ReturnTypeName:      data.ReturnTypeName,
-					ReturnTypeRef:       data.ReturnTypeRef,
-					ReturnIsStruct:      data.ReturnIsStruct,
-					ReturnTypeAttribute: data.ReturnTypeAttribute,
-					ServerCode:          fixAssignments(data.ServerCode),
-					ClientCode:          data.ClientCode,
-				},
+				Name: "server-payload-init",
+				Source: strings.Replace(section.Source,
+					`func {{ .Declaration.Name }}(`,
+					`func {{ .Declaration.Name }}`+serverPayloadInitNameSuffix+`(`,
+					-1,
+				),
+				Data:    &init,
 				FuncMap: section.FuncMap,
 			})
 		}
